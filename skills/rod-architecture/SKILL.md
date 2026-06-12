@@ -43,8 +43,9 @@ For user-defined repair, optimization, or "keep going until verified" tasks, use
 Design the system with two explicit layers:
 
 1. Stable Core
-   Protect security boundaries, identity, authentication, authorization, permissions, data integrity,
-   transactions, tenant boundaries, secrets, audit logs, destructive operations, production promotion
+   Protect security boundaries, identity, authentication, authorization, permissions, data
+   integrity, transactions, tenant boundaries, secrets, audit logs, destructive operations,
+   production promotion
    paths, and legal/safety guardrails.
    AI may suggest changes to Stable Core, but those changes require stricter tests, policy checks,
    rollback or recovery planning, and human review.
@@ -52,8 +53,8 @@ Design the system with two explicit layers:
 2. Evolvable Surfaces
    Expose changeable behavior as versioned, observable, testable, and reversible surfaces.
    Examples include prompts, configs, workflows, policies, retrieval settings, reranking rules,
-   routing rules, document templates, UI copy, feature flags, evals, tests, and non-critical business
-   rules.
+   routing rules, document templates, UI copy, feature flags, evals, tests, and
+   non-critical business rules.
 
 For every Evolvable Surface, prefer:
 
@@ -129,8 +130,8 @@ When useful, use:
   evals/
 ```
 
-These artifacts support Ratchet-Oriented Architecture by making evolvable surfaces, gates, baselines,
-and promotion history explicit.
+These artifacts support Ratchet-Oriented Architecture by making evolvable surfaces, gates,
+baselines, and promotion history explicit.
 
 ## Output Requirements
 

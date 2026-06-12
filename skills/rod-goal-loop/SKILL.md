@@ -50,7 +50,8 @@ Before starting a long or multi-step task, define or infer a Goal Contract.
 A Goal Contract includes:
 
 - Outcome: what must be true when the task is complete
-- Verification: tests, evals, commands, artifacts, benchmarks, or review checks that prove completion
+- Verification: tests, evals, commands, artifacts, benchmarks, or review checks that prove
+  completion
 - Constraints: what must not regress or be changed
 - Boundaries: files, modules, tools, environments, data, and permissions that may be used
 - Iteration policy: how to choose the next best action after each failed check

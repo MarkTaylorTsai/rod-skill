@@ -6,8 +6,8 @@ ROD (Ratchet-Oriented Development) helps AI agents make software changes in a wa
 observable, testable, reversible, and safe to improve over time. This repository now provides two
 first-class skills: one for architecture and one for goal-driven repair or optimization.
 
-Core principle: **AI may propose. Fitness must prove. Policy must permit. Release must be reversible.
-Baseline only moves forward.**
+Core principle: **AI may propose. Fitness must prove. Policy must permit. Release must be
+reversible. Baseline only moves forward.**
 
 ## Skills Included
 
@@ -15,7 +15,8 @@ This repository includes two related ROD skills:
 
 1. **ROD Architecture**
    Use when creating new systems or making structural changes. It helps agents design Stable Core
-   boundaries, Evolvable Surfaces, fitness checks, observability, rollback paths, and promotion gates.
+   boundaries, Evolvable Surfaces, fitness checks, observability, rollback paths, and
+   promotion gates.
 
 2. **ROD Goal Loop**
    Use when the user gives a repair, optimization, quality, performance, or "make this pass" target.
@@ -133,8 +134,8 @@ Recommended practice:
    Environment Variables.
 2. Add `.env` to `.gitignore` and never commit it.
 3. Commit only `.env.example` to document required variables without real values.
-4. Use `${ENV_VAR}` or `${ENV_VAR:-default}` in manifests or external config so the integration layer
-   can substitute values at runtime.
+4. Use `${ENV_VAR}` or `${ENV_VAR:-default}` in manifests or external config so the
+   integration layer can substitute values at runtime.
 
 Example:
 
@@ -162,7 +163,8 @@ variables or a secret manager. Never hardcode them.
 **Input**
 
 ```text
-Design a new AI support system that can evolve prompts, retrieval settings, and workflow rules safely.
+Design a new AI support system that can evolve prompts, retrieval settings, and workflow
+rules safely.
 ```
 
 **Expected ROD Architecture Summary**
@@ -246,8 +248,8 @@ rod-skill render skills/rod-architecture/skill.json
 ```
 
 The actual output includes the complete manifest. If the manifest contains values such as
-`${ROD_SKILL_MODE:-standard}`, the helper resolves them using the current environment or the provided
-default value.
+`${ROD_SKILL_MODE:-standard}`, the helper resolves them using the current environment or
+the provided default value.
 
 ## Integration
 

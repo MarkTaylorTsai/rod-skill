@@ -5,14 +5,22 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rod-skill"
 version = "0.2.0"
-description = "ROD Skills: Ratchet-Oriented Architecture and Goal Loop manifests and helper tools for AI agents."
+description = "ROD Skills: Architecture and Goal Loop manifests and helper tools for AI agents."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
   { name = "Mark Taylor Tsai" }
 ]
-keywords = ["ai-agent", "skill", "manifest", "rod", "software-quality", "architecture-pattern", "goal-loop"]
+keywords = [
+  "ai-agent",
+  "skill",
+  "manifest",
+  "rod",
+  "software-quality",
+  "architecture-pattern",
+  "goal-loop"
+]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
