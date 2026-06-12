@@ -1,6 +1,10 @@
 {
   "default_mode": "standard",
-  "risk_levels": ["low", "medium", "high"],
+  "risk_levels": [
+    "low",
+    "medium",
+    "high"
+  ],
   "surface_types": [
     "code",
     "config",
@@ -34,6 +38,77 @@
   ],
   "summary_template": {
     "heading": "ROD Summary",
-    "fields": ["Changed", "Surface", "Risk", "Fitness", "Rollback", "Remaining gaps"]
+    "fields": [
+      "Changed",
+      "Surface",
+      "Risk",
+      "Fitness",
+      "Rollback",
+      "Remaining gaps"
+    ]
+  },
+  "skills": [
+    {
+      "id": "rod-architecture",
+      "path": "skills/rod-architecture/skill.json",
+      "use_for": [
+        "new_project",
+        "architecture_design",
+        "structural_change",
+        "refactor_planning"
+      ]
+    },
+    {
+      "id": "rod-goal-loop",
+      "path": "skills/rod-goal-loop/skill.json",
+      "use_for": [
+        "bug_fix",
+        "optimization",
+        "failing_tests",
+        "quality_improvement",
+        "prompt_improvement",
+        "rag_improvement",
+        "workflow_improvement"
+      ]
+    }
+  ],
+  "goal_loop": {
+    "default_max_iterations": 5,
+    "stop_conditions": [
+      "goal_satisfied",
+      "blocked",
+      "unsafe",
+      "budget_reached",
+      "no_progress"
+    ]
+  },
+  "summary_templates": {
+    "rod_architecture": {
+      "heading": "ROD Architecture Summary",
+      "fields": [
+        "Changed",
+        "Stable Core protected",
+        "Evolvable Surfaces",
+        "Fitness",
+        "Observability",
+        "Rollback",
+        "Remaining gaps"
+      ]
+    },
+    "rod_goal_loop": {
+      "heading": "ROD Goal Loop Summary",
+      "fields": [
+        "Goal",
+        "Final decision",
+        "Changed",
+        "Surface",
+        "Risk",
+        "Iterations",
+        "Verification",
+        "Completion evidence",
+        "Rollback",
+        "Remaining gaps"
+      ]
+    }
   }
 }

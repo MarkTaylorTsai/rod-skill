@@ -1,14 +1,12 @@
 ---
-name: ROD
+name: ROD Architecture
 description: >-
-  Backward-compatible default alias for ROD Architecture. Apply Ratchet-Oriented Architecture
-  when creating new systems or making structural software changes.
+  Apply Ratchet-Oriented Architecture when creating new systems or making structural software
+  changes. Use this skill to separate Stable Core from Evolvable Surfaces and make software
+  observable, versioned, testable, reversible, and safe for AI-assisted evolution.
 ---
 
-# ROD — Backward-Compatible Architecture Alias
-
-This root SKILL.md is kept as a backward-compatible alias for ROD Architecture. For persistent
-repair or optimization tasks, use `skills/rod-goal-loop/SKILL.md`.
+# ROD Architecture — Ratchet-Oriented Architecture
 
 ## Purpose
 

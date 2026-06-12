@@ -1,0 +1,78 @@
+{
+  "manifest_version": "1.0.0",
+  "id": "rod-goal-loop",
+  "name": "ROD Goal Loop",
+  "display_name": "ROD Goal Loop — Ratchet-Oriented Goal Execution",
+  "version": "0.2.0",
+  "description": "Use the ROD Goal Loop for user-defined repair, optimization, verification, and improvement tasks. The agent must iterate through observable, reversible patches until the Goal Contract is satisfied, blocked, unsafe, or out of budget.",
+  "license": "MIT",
+  "language": "en",
+  "tags": [
+    "ai-agent",
+    "goal-loop",
+    "optimization-loop",
+    "repair-loop",
+    "ratchet-oriented-development",
+    "software-quality",
+    "fitness-checks",
+    "regression-tests",
+    "release-gates"
+  ],
+  "entrypoint": {
+    "type": "markdown",
+    "path": "skills/rod-goal-loop/SKILL.md"
+  },
+  "runtime": {
+    "type": "none",
+    "requires_network": false,
+    "requires_filesystem_write": false,
+    "requires_shell": false
+  },
+  "configuration": {
+    "mode": "${ROD_SKILL_MODE:-standard}",
+    "log_level": "${ROD_SKILL_LOG_LEVEL:-INFO}",
+    "defaults_path": "${ROD_SKILL_DEFAULTS_PATH:-config/rod.defaults.json}",
+    "max_iterations": "${ROD_GOAL_LOOP_MAX_ITERATIONS:-5}"
+  },
+  "security": {
+    "secrets_required": [],
+    "secret_handling_policy": "Do not hardcode secrets, tokens, API keys, credentials, private keys, seed phrases, production data, private user data, or sensitive payloads. Use environment variables or the host platform's secret manager. Never commit .env files.",
+    "data_handling": {
+      "stores_user_data": false,
+      "logs_sensitive_data": false,
+      "requires_redaction": true
+    }
+  },
+  "capabilities": [
+    "define_goal_contract",
+    "run_ratchet_goal_loop",
+    "diagnose_failures",
+    "design_reversible_patches",
+    "verify_against_fitness_checks",
+    "stop_on_blocker_or_regression"
+  ],
+  "files": [
+    {
+      "path": "skills/rod-goal-loop/SKILL.md",
+      "role": "instructions",
+      "required": true
+    },
+    {
+      "path": "config/rod.defaults.json",
+      "role": "configuration_defaults",
+      "required": false
+    }
+  ],
+  "compatibility": {
+    "agent_platforms": [
+      "generic-ai-agent",
+      "manifest-based-agent-runtime"
+    ],
+    "minimum_python_for_helpers": "3.10"
+  },
+  "source": {
+    "repository": "https://github.com/MarkTaylorTsai/rod-skill",
+    "homepage": "https://github.com/MarkTaylorTsai/rod-skill",
+    "issues": "https://github.com/MarkTaylorTsai/rod-skill/issues"
+  }
+}

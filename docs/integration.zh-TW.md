@@ -1,21 +1,53 @@
-# ROD Skill 整合指南
+# ROD Skills 整合指南
 
 [English](integration.md)
 
-本文件說明如何將 ROD Skill 整合到支援 Manifest / Skill 的 AI Agent runtime。
+本文件說明如何將 ROD skills 整合到支援 Manifest / Skill 載入的 AI Agent runtime。
+
+## Skills 與入口
+
+本 repo 包含三個 manifest 入口：
+
+- `skill.json`：ROD Architecture 的向後相容預設入口。
+- `skills/rod-architecture/skill.json`：first-class ROD Architecture skill。
+- `skills/rod-goal-loop/skill.json`：first-class ROD Goal Loop skill。
+
+root alias 的目的，是讓舊整合只讀取 `skill.json` 時仍然取得 architecture/development guidance。
+它不是第三個不同概念的 skill。
+
+## Skill 選擇規則
+
+使用 ROD Architecture 的情境：
+
+- 建立新系統
+- 進行結構性修改
+- 設計 evolvable surfaces
+- 定義 Stable Core 邊界
+- 規劃 prompts、workflows、RAG/KAG、policies 或 release gates
+
+使用 ROD Goal Loop 的情境：
+
+- 修復 bugs
+- 讓失敗測試通過
+- 優化效能或品質
+- 改善 prompts、RAG/KAG、workflows、policies 或 eval metrics
+- 使用者給出可衡量的完成目標
+
+除非有可衡量的 Goal Contract，否則不要把 ROD Goal Loop 用在開放式架構設計。
 
 ## 基本整合流程
 
-1. 讀取 `skill.json`。
-2. 驗證必要欄位：`id`、`name`、`version`、`description`、`entrypoint`、`security`。
-3. 解析 Manifest 中的環境變數佔位符，例如 `${ROD_SKILL_MODE:-standard}`。
-4. 讀取 `entrypoint.path` 指向的 `SKILL.md`。
-5. 將 `SKILL.md` 注入到 Agent 的技能、開發模式或系統流程中。
-6. 在執行會影響行為、品質、安全、資料、workflow、RAG/KAG、policy 或 release 的任務時啟用 ROD。
+1. 依任務選擇適合的 manifest。
+2. 讀取選定的 `skill.json`。
+3. 驗證必要欄位：`id`、`name`、`version`、`description`、`entrypoint`、`security`。
+4. 解析 Manifest 中的環境變數佔位符，例如 `${ROD_SKILL_MODE:-standard}`。
+5. 讀取 `entrypoint.path` 指向的 `SKILL.md`。
+6. 將該 `SKILL.md` 注入 Agent，作為 skill、development mode 或 system workflow guideline。
 
 ## 環境變數策略
 
-ROD Skill 本身不需要 API Key。若你的整合層需要外部模型、向量資料庫或私有服務，請使用環境變數或平台 Secret Manager。
+ROD Skills 預設不需要 API Key。若整合層需要外部模型、向量資料庫、私有服務或其他敏感資源，
+請使用環境變數或平台 Secret Manager。
 
 不要提交：
 
@@ -29,8 +61,8 @@ ROD Skill 本身不需要 API Key。若你的整合層需要外部模型、向�
 建議提交：
 
 - `.env.example`
-- config schema
-- redacted sample config
+- config schemas
+- redacted sample configs
 - 不含敏感值的 defaults
 
 ## Manifest 驗證
@@ -39,40 +71,48 @@ ROD Skill 本身不需要 API Key。若你的整合層需要外部模型、向�
 
 ```bash
 rod-skill validate skill.json
+rod-skill validate skills/rod-architecture/skill.json
+rod-skill validate skills/rod-goal-loop/skill.json
 ```
 
-渲染環境變數後的 Manifest：
+渲染環境變數後的 manifests：
 
 ```bash
 rod-skill render skill.json
+rod-skill render skills/rod-architecture/skill.json
+rod-skill render skills/rod-goal-loop/skill.json
 ```
-
-## Agent 使用建議
-
-建立新系統或進行結構性修改時，應啟用 Architecture Pattern Requirement，讓 Agent 及早識別
-Stable Core 邊界、Evolvable Surfaces、fitness checks、rollback paths 與 promotion gates。
-
-當任務屬於以下類型，建議啟用 ROD Standard 或 Strict Mode：
-
-- feature / bug fix / refactor
-- prompt、workflow、policy、RAG/KAG 或 config 改動
-- auth、permission、secrets、migration、production release gate
-- AI 輸出品質、安全、grounding 或 citation 行為變更
-
-對於 typo、格式、註解、單純文件修正，可使用 Lightweight Mode。
 
 ## 輸出格式
 
-ROD-guided 任務完成時，Agent 應輸出：
+ROD Architecture 應輸出：
 
 ```text
-ROD Summary:
+ROD Architecture Summary:
 - Changed:
-- Surface:
-- Risk:
+- Stable Core protected:
+- Evolvable Surfaces:
 - Fitness:
+- Observability:
 - Rollback:
 - Remaining gaps:
 ```
 
-這可讓使用者快速知道改了什麼、風險在哪、如何驗證，以及如何回滾。
+ROD Goal Loop 應輸出：
+
+```text
+ROD Goal Loop Summary:
+- Goal:
+- Final decision:
+- Changed:
+- Surface:
+- Risk:
+- Iterations:
+- Verification:
+- Completion evidence:
+- Rollback:
+- Remaining gaps:
+```
+
+Goal Loop 的 final decision 必須是 `complete`、`blocked`、`needs_review`、`reverted`、`unsafe`
+或 `budget_reached` 之一。
