@@ -55,7 +55,8 @@ A Goal Contract includes:
 - Baseline: current metric values, expected thresholds, and protected behavior before patching
 - Ratchet gate: the comparison rule that decides whether a patch is accepted, rejected, or needs
   review
-- Rollback point: git commit, patch backup, file snapshot, config version, or other reversible state
+- Rollback point: git commit, patch backup, full project file snapshot, config version, or other
+  reversible state that covers every file or artifact the patch may modify
 - Constraints: what must not regress or be changed
 - Boundaries: files, modules, tools, environments, data, and permissions that may be used
 - Iteration policy: how to choose the next best action after each failed check
@@ -115,8 +116,10 @@ A baseline gate should include:
 - protected metrics: values that must not regress, such as test pass count, error count, latency,
   throughput, bundle size, win-rate bounds, safety score, or behavior invariants
 - tolerance: explicit allowed drift for noisy metrics, especially timing and benchmark results
-- rollback method: git restore, revert commit, patch backup, file snapshot, config version rollback,
-  or a clearly documented manual rollback path
+- rollback method: git restore, revert commit, patch backup, full project file snapshot, config
+  version rollback, or a clearly documented manual rollback path
+- rollback coverage: the exact files, directories, configs, generated artifacts, and baseline files
+  that can be restored by the rollback method
 - promotion rule: when the new result is allowed to replace the baseline
 
 If a task has no existing baseline, create the smallest useful baseline first. Do not claim a Goal
@@ -125,6 +128,11 @@ state whether the ratchet gate accepted it.
 
 If the ratchet gate fails, default to rollback. Keep the failed patch only when rollback is unsafe,
 impossible, or the user explicitly asks to inspect the failure.
+
+A baseline-only rollback is not enough for code or configuration patches. If a patch can modify
+project files, the rollback point must restore those project files, not only `baseline.json`, reports,
+logs, or metric artifacts. A rollback method that restores only the baseline artifact is acceptable
+only when the patch itself changes only the baseline artifact.
 
 ## Loop Requirements
 
@@ -140,6 +148,7 @@ Do not continue if:
 
 - the next step would modify Stable Core without required review
 - no baseline or rollback point exists for a non-trivial improvement patch
+- rollback coverage does not include every project file or artifact that the patch may modify
 - verification cannot be run and no acceptable fallback exists
 - the task requires credentials, production access, or external approval not available
 - repeated iterations are not improving evidence
@@ -179,6 +188,7 @@ patch:
   comparison_result:
   ratchet_gate:
   rollback_plan:
+  rollback_coverage:
   rollback_trigger:
 ```
 
@@ -200,6 +210,7 @@ ROD Goal Loop Summary:
 - Ratchet gate:
 - Completion evidence:
 - Rollback:
+- Rollback coverage:
 - Remaining gaps:
 ```
 
@@ -221,6 +232,7 @@ Avoid:
 
 - looping without a measurable completion standard
 - accepting a non-trivial patch without a baseline, comparison, and rollback point
+- treating a baseline-only backup as rollback coverage for code or config changes
 - continuing after repeated verification failures without a new hypothesis
 - treating activity as progress
 - expanding scope during a Goal Loop without reason
@@ -239,6 +251,7 @@ When uncertain:
 - Prefer one focused patch per iteration.
 - Prefer rollback over accumulated broken state.
 - Prefer creating a small baseline gate before optimizing or improving behavior.
+- Prefer full project file snapshots when the project is not yet in git.
 - Prefer adding a failing test before fixing a bug.
 - Prefer completing the user's Goal over broad cleanup.
 - Prefer stopping with a clear blocker over blind iteration.
