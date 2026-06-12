@@ -1,15 +1,14 @@
 {
   "manifest_version": "1.0.0",
-  "id": "rod",
-  "name": "ROD",
-  "display_name": "ROD — Architecture Alias",
+  "id": "rod-architecture",
+  "name": "ROD Architecture",
+  "display_name": "ROD Architecture — Ratchet-Oriented Architecture",
   "version": "0.2.0",
-  "description": "Backward-compatible default alias for ROD Architecture. Use this root manifest for structural software design, Stable Core boundaries, Evolvable Surfaces, fitness checks, observability, rollback paths, and promotion gates. For persistent repair or optimization tasks, use skills/rod-goal-loop/skill.json.",
+  "description": "Apply Ratchet-Oriented Architecture when creating new systems or making structural software changes. Use this skill to separate Stable Core from Evolvable Surfaces and make software observable, versioned, testable, reversible, and safe for AI-assisted evolution.",
   "license": "MIT",
   "language": "en",
   "tags": [
     "ai-agent",
-    "development-process",
     "architecture-pattern",
     "ratchet-oriented-architecture",
     "ratchet-oriented-development",
@@ -20,7 +19,7 @@
   ],
   "entrypoint": {
     "type": "markdown",
-    "path": "SKILL.md"
+    "path": "skills/rod-architecture/SKILL.md"
   },
   "runtime": {
     "type": "none",
@@ -31,27 +30,7 @@
   "configuration": {
     "mode": "${ROD_SKILL_MODE:-standard}",
     "log_level": "${ROD_SKILL_LOG_LEVEL:-INFO}",
-    "defaults_path": "${ROD_SKILL_DEFAULTS_PATH:-config/rod.defaults.json}",
-    "environment_variables": [
-      {
-        "name": "ROD_SKILL_MODE",
-        "required": false,
-        "default": "standard",
-        "description": "Default operating mode hint: lightweight, standard, or strict."
-      },
-      {
-        "name": "ROD_SKILL_LOG_LEVEL",
-        "required": false,
-        "default": "INFO",
-        "description": "Log level for local helper tools."
-      },
-      {
-        "name": "ROD_SKILL_DEFAULTS_PATH",
-        "required": false,
-        "default": "config/rod.defaults.json",
-        "description": "Path to external defaults used by local tooling."
-      }
-    ]
+    "defaults_path": "${ROD_SKILL_DEFAULTS_PATH:-config/rod.defaults.json}"
   },
   "security": {
     "secrets_required": [],
@@ -72,28 +51,8 @@
   ],
   "files": [
     {
-      "path": "SKILL.md",
-      "role": "instructions",
-      "required": true
-    },
-    {
       "path": "skills/rod-architecture/SKILL.md",
       "role": "instructions",
-      "required": true
-    },
-    {
-      "path": "skills/rod-architecture/skill.json",
-      "role": "manifest",
-      "required": true
-    },
-    {
-      "path": "skills/rod-goal-loop/SKILL.md",
-      "role": "instructions",
-      "required": true
-    },
-    {
-      "path": "skills/rod-goal-loop/skill.json",
-      "role": "manifest",
       "required": true
     },
     {

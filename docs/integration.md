@@ -1,21 +1,56 @@
-# ROD Skill Integration Guide
+# ROD Skills Integration Guide
 
 [繁體中文](integration.zh-TW.md)
 
-This document explains how to integrate the ROD Skill into an AI Agent runtime that supports Manifest / Skill loading.
+This document explains how to integrate the ROD skills into an AI Agent runtime that supports
+Manifest / Skill loading.
+
+## Skills and Entry Points
+
+This repository includes three manifest entry points:
+
+- `skill.json`: backward-compatible default alias for ROD Architecture.
+- `skills/rod-architecture/skill.json`: first-class ROD Architecture skill.
+- `skills/rod-goal-loop/skill.json`: first-class ROD Goal Loop skill.
+
+The root alias exists so older integrations that only load `skill.json` continue to receive
+architecture/development guidance. It is not a separate third skill.
+
+## Skill Selection Rules
+
+Use ROD Architecture when:
+
+- creating a new system
+- making structural changes
+- designing evolvable surfaces
+- defining Stable Core boundaries
+- planning prompts, workflows, RAG/KAG, policies, or release gates
+
+Use ROD Goal Loop when:
+
+- fixing bugs
+- making failing tests pass
+- optimizing performance or quality
+- improving prompts, RAG/KAG, workflows, policies, or eval metrics
+- the user gives a measurable completion target
+
+Do not use ROD Goal Loop for open-ended architecture design unless there is a measurable
+Goal Contract.
 
 ## Basic Integration Flow
 
-1. Read `skill.json`.
-2. Validate the required fields: `id`, `name`, `version`, `description`, `entrypoint`, and `security`.
-3. Resolve manifest environment variable placeholders, such as `${ROD_SKILL_MODE:-standard}`.
-4. Read the `SKILL.md` file referenced by `entrypoint.path`.
-5. Inject `SKILL.md` into the agent as a skill, development mode, or system workflow guideline.
-6. Enable ROD when a task may affect behavior, quality, security, data, workflows, RAG/KAG, policy, or release behavior.
+1. Choose the manifest that matches the task.
+2. Read the selected `skill.json`.
+3. Validate required fields: `id`, `name`, `version`, `description`, `entrypoint`, and `security`.
+4. Resolve manifest environment variable placeholders, such as `${ROD_SKILL_MODE:-standard}`.
+5. Read the `SKILL.md` file referenced by `entrypoint.path`.
+6. Inject that `SKILL.md` into the agent as a skill, development mode, or system workflow guideline.
 
 ## Environment Variable Strategy
 
-ROD Skill itself does not require an API key. If your integration layer needs external models, vector databases, private services, or other sensitive resources, use environment variables or your platform's Secret Manager.
+ROD Skills do not require API keys by default. If your integration layer needs external models,
+vector databases, private services, or other sensitive resources, use environment variables or your
+platform's Secret Manager.
 
 Do not commit:
 
@@ -39,41 +74,48 @@ After installing the helper, run:
 
 ```bash
 rod-skill validate skill.json
+rod-skill validate skills/rod-architecture/skill.json
+rod-skill validate skills/rod-goal-loop/skill.json
 ```
 
-Render the manifest after environment variable substitution:
+Render manifests after environment variable substitution:
 
 ```bash
 rod-skill render skill.json
+rod-skill render skills/rod-architecture/skill.json
+rod-skill render skills/rod-goal-loop/skill.json
 ```
 
-## Agent Usage Recommendations
+## Output Formats
 
-Enable the Architecture Pattern Requirement when creating new systems or making structural changes so
-the agent identifies Stable Core boundaries, Evolvable Surfaces, fitness checks, rollback paths,
-and promotion gates early.
-
-Use ROD Standard Mode or Strict Mode for tasks such as:
-
-- feature work, bug fixes, or refactors
-- prompt, workflow, policy, RAG/KAG, or config changes
-- auth, permission, secrets, migrations, or production release gates
-- AI output quality, safety, grounding, or citation behavior changes
-
-Use Lightweight Mode for typo fixes, formatting, comments, or documentation-only edits.
-
-## Output Format
-
-When completing a ROD-guided task, the agent should output:
+ROD Architecture should produce:
 
 ```text
-ROD Summary:
+ROD Architecture Summary:
 - Changed:
-- Surface:
-- Risk:
+- Stable Core protected:
+- Evolvable Surfaces:
 - Fitness:
+- Observability:
 - Rollback:
 - Remaining gaps:
 ```
 
-This helps users quickly understand what changed, where the risk is, how the work was verified, and how it can be rolled back.
+ROD Goal Loop should produce:
+
+```text
+ROD Goal Loop Summary:
+- Goal:
+- Final decision:
+- Changed:
+- Surface:
+- Risk:
+- Iterations:
+- Verification:
+- Completion evidence:
+- Rollback:
+- Remaining gaps:
+```
+
+The Goal Loop final decision must be one of `complete`, `blocked`, `needs_review`, `reverted`,
+`unsafe`, or `budget_reached`.
