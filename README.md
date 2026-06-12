@@ -3,15 +3,19 @@
 [繁體中文](README.zh-TW.md)
 
 ROD (Ratchet-Oriented Development) helps AI agents make software changes in a way that is
-observable, testable, reversible, and safe to improve over time. This repository now provides two
-first-class skills: one for architecture and one for goal-driven repair or optimization.
+observable, testable, reversible, and safe to improve over time. This repository contains the root
+ROD skill plus two specialized companion skills: `rod-architecture` and `rod-goal-loop`.
 
 Core principle: **AI may propose. Fitness must prove. Policy must permit. Release must be
 reversible. Baseline only moves forward.**
 
 ## Skills Included
 
-This repository includes two related ROD skills:
+This repository includes the root ROD skill and two specialized companion skills:
+
+0. **ROD**
+   Use as the umbrella entry point for the skill pack. It helps agents choose between structural
+   architecture guidance and measurable goal-loop execution.
 
 1. **ROD Architecture**
    Use when creating new systems or making structural changes. It helps agents design Stable Core
@@ -23,8 +27,7 @@ This repository includes two related ROD skills:
    It defines a Goal Contract and loops through Observe, Diagnose, Plan, Patch, Verify, Compare, and
    Decide until the goal is complete or a stop condition is reached.
 
-The root `SKILL.md` and `skill.json` are kept as a backward-compatible default alias for
-ROD Architecture.
+The root `SKILL.md` and `skill.json` define the umbrella skill pack entry point.
 
 ## Core Features
 
@@ -49,7 +52,11 @@ rod-skill/
 │   └── rod.defaults.json
 ├── docs/
 │   ├── integration.md
-│   └── integration.zh-TW.md
+│   ├── integration.zh-TW.md
+│   ├── manifest-contract.md
+│   └── manifest-contract.zh-TW.md
+├── schemas/
+│   └── skill.schema.json
 ├── skills/
 │   ├── rod-architecture/
 │   │   ├── SKILL.md
@@ -69,6 +76,7 @@ rod-skill/
 ├── .env.example
 ├── .gitignore
 ├── LICENSE
+├── Makefile
 ├── README.md
 ├── README.zh-TW.md
 ├── SKILL.md
@@ -104,23 +112,30 @@ For development and tests:
 
 ```bash
 pip install -e '.[dev]'
-pytest -q
+python -m pytest -q
 ```
 
 ### 4. Validate the manifests
 
-```bash
-rod-skill validate skill.json
-rod-skill validate skills/rod-architecture/skill.json
-rod-skill validate skills/rod-goal-loop/skill.json
-```
-
-Or:
+Use the module form because it works even when your Python script directory is not on `PATH`:
 
 ```bash
 python -m rod_skill.cli validate skill.json
 python -m rod_skill.cli validate skills/rod-architecture/skill.json
 python -m rod_skill.cli validate skills/rod-goal-loop/skill.json
+```
+
+Optional, if your Python script directory is on `PATH`:
+
+```bash
+rod-skill validate skill.json
+```
+
+Or use the convenience Makefile targets:
+
+```bash
+make test
+make validate
 ```
 
 ## Security Notice: Environment Variables and Sensitive Credentials
@@ -155,6 +170,22 @@ set +a
 This project does not require any API key by default. If your own agent platform adds external APIs,
 model providers, private databases, or private services, always load credentials from environment
 variables or a secret manager. Never hardcode them.
+
+## Skill Compatibility Checklist
+
+This repository is designed to be portable across skill-style agent runtimes.
+
+- Each skill has a `SKILL.md` entrypoint.
+- Each skill has a `skill.json` manifest.
+- Root skill and subskills are independently validatable.
+- Runtime defaults to no shell, no filesystem write, and no network access.
+- Configuration examples avoid secrets.
+- Tests guard against malformed JSON, malformed front matter, hidden Unicode, and single-line blob
+  formatting.
+- `schemas/skill.schema.json` documents the portable manifest shape used by this repository.
+
+This repository uses a portable manifest format. If you are targeting a specific skill registry or
+agent platform, run that platform's official schema validation before publishing.
 
 ## Usage Examples
 

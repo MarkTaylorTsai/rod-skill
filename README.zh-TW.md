@@ -3,13 +3,17 @@
 [English](README.md)
 
 ROD（Ratchet-Oriented Development）協助 AI Agent 以可觀察、可測試、可回滾、可持續改進的方式修改軟體。
-本 repo 現在提供兩個 first-class skills：一個用於架構設計，一個用於有明確目標的修復或優化。
+本 repo 包含 ROD 根技能，以及兩個專用子技能：`rod-architecture` 與 `rod-goal-loop`。
 
 核心精神是：**AI 可以提出修改，但 fitness checks 必須證明修改有效，policy 必須允許，release 必須可回滾，baseline 只能往前推進。**
 
 ## 包含的 Skills
 
-本 repo 包含兩個相關的 ROD skills：
+本 repo 包含 ROD 根技能，以及兩個專用子技能：
+
+0. **ROD**
+   作為整套 skill pack 的 umbrella entry point，協助 Agent 在結構性架構指引與可衡量的
+   goal-loop 執行之間做選擇。
 
 1. **ROD Architecture**
    用於建立新系統或進行結構性修改，協助 Agent 及早設計 Stable Core 邊界、Evolvable Surfaces、
@@ -20,7 +24,7 @@ ROD（Ratchet-Oriented Development）協助 AI Agent 以可觀察、可測試、
    Goal Contract，並透過 Observe、Diagnose、Plan、Patch、Verify、Compare、Decide 循環，
    直到目標完成或遇到停止條件。
 
-根目錄的 `SKILL.md` 與 `skill.json` 保留為 ROD Architecture 的向後相容預設入口。
+根目錄的 `SKILL.md` 與 `skill.json` 定義整套 skill pack 的 umbrella entry point。
 
 ## 核心功能
 
@@ -44,7 +48,11 @@ rod-skill/
 │   └── rod.defaults.json
 ├── docs/
 │   ├── integration.md
-│   └── integration.zh-TW.md
+│   ├── integration.zh-TW.md
+│   ├── manifest-contract.md
+│   └── manifest-contract.zh-TW.md
+├── schemas/
+│   └── skill.schema.json
 ├── skills/
 │   ├── rod-architecture/
 │   │   ├── SKILL.md
@@ -64,6 +72,7 @@ rod-skill/
 ├── .env.example
 ├── .gitignore
 ├── LICENSE
+├── Makefile
 ├── README.md
 ├── README.zh-TW.md
 ├── SKILL.md
@@ -99,23 +108,30 @@ pip install -e .
 
 ```bash
 pip install -e '.[dev]'
-pytest -q
+python -m pytest -q
 ```
 
 ### 4. 驗證 Manifests
 
-```bash
-rod-skill validate skill.json
-rod-skill validate skills/rod-architecture/skill.json
-rod-skill validate skills/rod-goal-loop/skill.json
-```
-
-或：
+建議使用 module form，因為即使 Python script 目錄不在 `PATH` 中也能執行：
 
 ```bash
 python -m rod_skill.cli validate skill.json
 python -m rod_skill.cli validate skills/rod-architecture/skill.json
 python -m rod_skill.cli validate skills/rod-goal-loop/skill.json
+```
+
+如果你的 Python script 目錄已在 `PATH` 中，也可以選用：
+
+```bash
+rod-skill validate skill.json
+```
+
+也可以使用 Makefile 提供的便利目標：
+
+```bash
+make test
+make validate
 ```
 
 ## 安全提示：環境變數與敏感憑證
@@ -147,6 +163,21 @@ set +a
 
 本專案目前不需要任何 API Key。若你在自己的 Agent 平台中加入外部 API、模型供應商或私有資料庫，
 請一律使用環境變數或 secret manager 載入，不要 hardcode。
+
+## Skill 相容性檢查表
+
+本 repo 設計目標是可攜至不同 skill-style agent runtime。
+
+- 每個 skill 都有 `SKILL.md` 作為入口。
+- 每個 skill 都有 `skill.json` manifest。
+- root skill 與 subskills 都可獨立驗證。
+- 預設 runtime 不要求 shell、filesystem write 或 network access。
+- 設定範例不包含 secrets。
+- 測試會防止 JSON 格式錯誤、front matter 錯誤、隱藏 Unicode、單行 blob 等問題。
+- `schemas/skill.schema.json` 記錄本 repo 使用的可攜式 manifest 形狀。
+
+本 repo 使用可攜式 manifest 格式。若要發布到特定 skill registry 或 agent platform，
+請在發布前再執行該平台官方 schema 驗證。
 
 ## 使用範例
 

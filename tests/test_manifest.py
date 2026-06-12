@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
+from jsonschema import Draft7Validator
 
 from rod_skill.config import RodConfig
 from rod_skill.manifest import ManifestError, load_manifest, validate_manifest
@@ -23,7 +25,8 @@ def test_load_repository_manifest() -> None:
     assert manifest["entrypoint"] == {"type": "markdown", "path": "SKILL.md"}
     assert manifest["runtime"]["requires_network"] is False
     assert manifest["security"]["secrets_required"] == []
-    assert "run_ratchet_goal_loop" not in manifest["capabilities"]
+    assert "select_rod_subskill" in manifest["capabilities"]
+    assert "run_ratchet_goal_loop" in manifest["capabilities"]
 
 
 def test_load_all_skill_manifests() -> None:
@@ -76,3 +79,15 @@ def test_config_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert config.mode == "strict"
     assert config.log_level == "DEBUG"
     assert str(config.defaults_path) == "config/custom.json"
+
+
+def test_manifests_match_portable_json_schema() -> None:
+    schema = json.loads(Path("schemas/skill.schema.json").read_text(encoding="utf-8"))
+    Draft7Validator.check_schema(schema)
+    validator = Draft7Validator(schema)
+
+    for path in MANIFEST_PATHS:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        errors = sorted(validator.iter_errors(manifest), key=lambda error: list(error.path))
+
+        assert errors == []

@@ -19,6 +19,8 @@ MARKDOWN_FILES = [
     ROOT / "README.zh-TW.md",
     ROOT / "docs/integration.md",
     ROOT / "docs/integration.zh-TW.md",
+    ROOT / "docs/manifest-contract.md",
+    ROOT / "docs/manifest-contract.zh-TW.md",
     *SKILL_FILES,
 ]
 JSON_FILES = [
@@ -26,6 +28,7 @@ JSON_FILES = [
     ROOT / "skills/rod-architecture/skill.json",
     ROOT / "skills/rod-goal-loop/skill.json",
     ROOT / "config/rod.defaults.json",
+    ROOT / "schemas/skill.schema.json",
 ]
 PYTHON_FILES = [
     *sorted((ROOT / "src/rod_skill").glob("*.py")),
@@ -55,7 +58,7 @@ def _tracked_text_files() -> list[Path]:
         path = ROOT / name
         if path.suffix.lower() in {".md", ".json", ".py", ".toml", ".yml", ".yaml", ".txt"}:
             paths.append(path)
-        elif path.name in {".gitignore", ".env.example", ".gitattributes"}:
+        elif path.name in {".gitignore", ".env.example", ".gitattributes", "Makefile"}:
             paths.append(path)
     return paths
 

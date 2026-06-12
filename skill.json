@@ -2,9 +2,9 @@
   "manifest_version": "1.0.0",
   "id": "rod",
   "name": "ROD",
-  "display_name": "ROD — Architecture Alias",
+  "display_name": "ROD — Ratchet-Oriented Development",
   "version": "0.2.0",
-  "description": "Backward-compatible default alias for ROD Architecture. Use this root manifest for structural software design, Stable Core boundaries, Evolvable Surfaces, fitness checks, observability, rollback paths, and promotion gates. For persistent repair or optimization tasks, use skills/rod-goal-loop/skill.json.",
+  "description": "Root entry point for the ROD skill pack. Use it to select between Ratchet-Oriented Architecture for structural design and ROD Goal Loop for measurable repair, optimization, and verification tasks while preserving observable, testable, reversible change discipline.",
   "license": "MIT",
   "language": "en",
   "tags": [
@@ -68,7 +68,10 @@
     "design_evolvable_surfaces",
     "define_fitness_checks",
     "design_reversible_patches",
-    "define_promotion_gates"
+    "define_promotion_gates",
+    "select_rod_subskill",
+    "define_goal_contract",
+    "run_ratchet_goal_loop"
   ],
   "files": [
     {

@@ -1,19 +1,29 @@
 ---
 name: ROD
 description: >-
-  Backward-compatible default alias for ROD Architecture. Apply Ratchet-Oriented Architecture
-  when creating new systems or making structural software changes.
+  Root entry point for the ROD skill pack. Select ROD Architecture for structural design or
+  ROD Goal Loop for measurable repair, optimization, and verification tasks.
 ---
 
-# ROD — Backward-Compatible Architecture Alias
+# ROD — Ratchet-Oriented Development Skill Pack
 
-This root SKILL.md is kept as a backward-compatible alias for ROD Architecture. For persistent
-repair or optimization tasks, use `skills/rod-goal-loop/SKILL.md`.
+This root `SKILL.md` is the umbrella entry point for ROD. Use it to select the appropriate
+specialized skill, then apply that skill's more specific instructions.
+
+## Skill Selection
+
+Use `skills/rod-architecture/SKILL.md` when creating a new system, making structural changes,
+designing AI-enabled software, or refactoring architecture.
+
+Use `skills/rod-goal-loop/SKILL.md` when the user gives a measurable repair, optimization,
+verification, quality, performance, or "keep going until this passes" target.
+
+When the task is structural and not an explicit persistent loop, default to ROD Architecture.
 
 ## Purpose
 
-Use this skill when creating a new system, making structural changes, designing AI-enabled software,
-or refactoring architecture.
+Use this root skill to keep AI-assisted software changes observable, testable, reversible, and safe
+to improve over time.
 
 ROD Architecture means designing software so future AI-generated changes can be made as small,
 observable, testable, reversible patches.
@@ -37,8 +47,8 @@ Use for:
 - prompt/config/workflow registry design
 - observability and eval harness design
 
-Do not use this skill as a persistent optimization loop.
-For user-defined repair, optimization, or "keep going until verified" tasks, use ROD Goal Loop.
+For persistent repair, optimization, or "keep going until verified" tasks, switch to ROD Goal
+Loop instead of treating the architecture path as an optimization loop.
 
 ## Architecture Pattern Requirement
 
