@@ -2,7 +2,9 @@
 
 [English](README.md)
 
-ROD（Ratchet-Oriented Development）是一個可整合到 AI Agent / Skill / Manifest 系統中的開發技能，用來協助新專案與既有專案用「可驗證、可回滾、可逐步提升」的方式進行軟體修改。
+ROD（Ratchet-Oriented Development）是一個可整合到 AI Agent / Skill / Manifest 系統中的開發技能，
+用來協助新專案與既有專案用「可驗證、可回滾、可逐步提升」的方式進行軟體修改。
+ROD 不只是開發流程，也提供適合 AI-evolvable software 的 architecture guidance。
 
 核心精神是：**AI 可以提出修改，但 fitness checks 必須證明修改有效，policy 必須允許，release 必須可回滾，baseline 只能往前推進。**
 
@@ -22,6 +24,8 @@ ROD（Ratchet-Oriented Development）是一個可整合到 AI Agent / Skill / Ma
 - 要求 prompt、workflow、RAG/KAG、policy、config、AI 輸出等行為改動具備 fitness checks。
 - 支援 bug fix 轉換為 regression test 的工作模式。
 - 提供 Manifest 驗證 CLI，方便整合前先檢查結構是否完整。
+- 加入 Ratchet-Oriented Architecture 指引，協助新系統一開始就區分受保護的 Stable Core
+  與可版本化的 Evolvable Surfaces。
 
 ## 專案目錄結構
 
@@ -179,7 +183,7 @@ rod-skill render skill.json
 {
   "id": "rod",
   "name": "ROD",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "entrypoint": {
     "type": "markdown",
     "path": "SKILL.md"

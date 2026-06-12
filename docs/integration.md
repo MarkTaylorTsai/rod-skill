@@ -49,6 +49,10 @@ rod-skill render skill.json
 
 ## Agent Usage Recommendations
 
+Enable the Architecture Pattern Requirement when creating new systems or making structural changes so
+the agent identifies Stable Core boundaries, Evolvable Surfaces, fitness checks, rollback paths,
+and promotion gates early.
+
 Use ROD Standard Mode or Strict Mode for tasks such as:
 
 - feature work, bug fixes, or refactors

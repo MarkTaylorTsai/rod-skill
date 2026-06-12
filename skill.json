@@ -3,7 +3,7 @@
   "id": "rod",
   "name": "ROD",
   "display_name": "ROD — Ratchet-Oriented Development",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Use Ratchet-Oriented Development for meaningful software work in new or existing projects, especially AI systems, RAG/KAG, prompts, workflows, configs, policies, release gates, migrations, refactors, and behavior-changing code. Use lightweight mode for tiny low-risk edits.",
   "license": "MIT",
   "language": "en",
@@ -16,7 +16,11 @@
     "kag",
     "workflow",
     "policy",
-    "release-gates"
+    "release-gates",
+    "architecture-pattern",
+    "ratchet-oriented-architecture",
+    "evolvable-surfaces",
+    "stable-core"
   ],
   "entrypoint": {
     "type": "markdown",
@@ -67,7 +71,10 @@
     "separate_stable_core_from_evolvable_surfaces",
     "define_fitness_checks",
     "design_reversible_patches",
-    "summarize_rod_guided_work"
+    "summarize_rod_guided_work",
+    "apply_ratchet_oriented_architecture",
+    "identify_stable_core_boundaries",
+    "design_evolvable_surfaces"
   ],
   "files": [
     {

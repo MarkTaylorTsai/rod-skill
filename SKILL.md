@@ -157,6 +157,39 @@ Strict Mode requirements:
 10. Do not replace gates with vibes.
    “Looks better” is not proof. Meaningful AI/system behavior changes need tests, evals, traces, or review evidence.
 
+## Architecture Pattern Requirement
+
+When creating a new system or making structural changes, apply Ratchet-Oriented Architecture.
+
+Design the system with two explicit layers:
+
+1. Stable Core
+   Protect security boundaries, identity, authentication, authorization, permissions, data integrity,
+   transactions, tenant boundaries, secrets, audit logs, destructive operations, and production
+   promotion paths.
+   AI may suggest changes to Stable Core, but those changes require stricter tests, policy checks,
+   rollback or recovery planning, and human review.
+
+2. Evolvable Surfaces
+   Expose changeable behavior as versioned, observable, testable, and reversible surfaces.
+   Examples include prompts, configs, workflows, policies, retrieval settings, reranking rules,
+   routing rules, document templates, UI copy, feature flags, evals, tests, and non-critical
+   business rules.
+
+For every Evolvable Surface, prefer:
+
+- a clear owner
+- a version or baseline
+- a file, registry, schema, or declarative definition
+- a fitness check
+- a rollback or recovery method
+- observability signals
+- a promotion gate appropriate to risk
+
+Do not hide evolvable behavior inside scattered imperative code unless there is a clear reason.
+The default architecture should make future AI-generated patches smaller, safer, easier to evaluate,
+and easier to roll back.
+
 ## Development Pattern
 
 Follow this sequence when starting or modifying a system.
@@ -544,11 +577,13 @@ For a new project, define:
 - how to run tests
 - where configs live
 - where schemas live
-- how prompts or AI behavior are versioned, if applicable
+- Stable Core boundaries
+- Evolvable Surfaces and how they are versioned, if applicable
+- fitness checks for important behavior
 - how failures become tests
-- what is Stable Core
-- what is safe to evolve
-- how rollback works
+- rollback or recovery paths
+- observability signals
+- promotion gates appropriate to risk
 
 For a new AI project, prefer adding from the start:
 
@@ -593,6 +628,9 @@ When a project has no existing convention and the change is meaningful, use this
 ```
 
 Use only what is needed.
+
+These artifacts support Ratchet-Oriented Architecture by making evolvable surfaces, gates, baselines,
+and promotion history explicit.
 
 ### ratchet.yaml
 

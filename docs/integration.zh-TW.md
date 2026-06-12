@@ -49,6 +49,9 @@ rod-skill render skill.json
 
 ## Agent 使用建議
 
+建立新系統或進行結構性修改時，應啟用 Architecture Pattern Requirement，讓 Agent 及早識別
+Stable Core 邊界、Evolvable Surfaces、fitness checks、rollback paths 與 promotion gates。
+
 當任務屬於以下類型，建議啟用 ROD Standard 或 Strict Mode：
 
 - feature / bug fix / refactor

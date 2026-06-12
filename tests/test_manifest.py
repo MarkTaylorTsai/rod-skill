@@ -24,7 +24,7 @@ def test_validate_manifest_rejects_missing_required_field() -> None:
                 "manifest_version": "1.0.0",
                 "id": "rod",
                 "name": "ROD",
-                "version": "0.1.0",
+                "version": "0.1.1",
                 "entrypoint": {"type": "markdown", "path": "SKILL.md"},
                 "security": {"secret_handling_policy": "Use env vars."},
             }

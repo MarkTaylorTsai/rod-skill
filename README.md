@@ -2,7 +2,10 @@
 
 [繁體中文](README.zh-TW.md)
 
-ROD (Ratchet-Oriented Development) is a development skill for AI Agent / Skill / Manifest systems. It helps new and existing projects make software changes in a way that is verifiable, reversible, observable, and safe to improve over time.
+ROD (Ratchet-Oriented Development) is a development skill for AI Agent / Skill / Manifest systems.
+It helps new and existing projects make software changes in a way that is verifiable, reversible,
+observable, and safe to improve over time. ROD is not only a development process; it also provides
+architecture guidance for AI-evolvable software.
 
 Core principle: **AI may propose. Fitness must prove. Policy must permit. Release must be reversible. Baseline only moves forward.**
 
@@ -22,6 +25,8 @@ This repository packages the ROD Skill as an open-source project that can be dow
 - Requires behavior-changing prompts, workflows, RAG/KAG settings, policies, configs, and AI outputs to have fitness checks.
 - Encourages bug fixes to become regression tests.
 - Provides a manifest validation CLI for checking integrations before use.
+- Adds Ratchet-Oriented Architecture guidance for designing new systems with protected Stable Core
+  boundaries and versioned Evolvable Surfaces.
 
 ## Directory Structure
 
@@ -181,7 +186,7 @@ rod-skill render skill.json
 {
   "id": "rod",
   "name": "ROD",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "entrypoint": {
     "type": "markdown",
     "path": "SKILL.md"
