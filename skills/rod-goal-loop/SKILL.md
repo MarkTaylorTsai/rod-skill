@@ -52,6 +52,10 @@ A Goal Contract includes:
 - Outcome: what must be true when the task is complete
 - Verification: tests, evals, commands, artifacts, benchmarks, or review checks that prove
   completion
+- Baseline: current metric values, expected thresholds, and protected behavior before patching
+- Ratchet gate: the comparison rule that decides whether a patch is accepted, rejected, or needs
+  review
+- Rollback point: git commit, patch backup, file snapshot, config version, or other reversible state
 - Constraints: what must not regress or be changed
 - Boundaries: files, modules, tools, environments, data, and permissions that may be used
 - Iteration policy: how to choose the next best action after each failed check
@@ -66,33 +70,61 @@ Use this loop:
 
 1. Observe
    Inspect the current baseline, relevant files, tests, configs, prompts, workflows, logs, evals,
-   and failure output.
+   and failure output. If no baseline exists for an improvement task, create the smallest useful
+   baseline before patching.
 
 2. Diagnose
    Identify the most likely failure cause or improvement bottleneck.
    Classify the affected surface and risk.
 
 3. Plan
-   Choose the smallest reversible patch that could move the system closer to the Goal.
+   Choose the smallest reversible patch that could move the system closer to the Goal. Identify the
+   rollback point and the exact comparison rule that will accept or reject the patch.
 
 4. Patch
    Implement one focused change.
    Keep the change explainable and reversible.
 
 5. Verify
-   Run the defined tests, evals, checks, builds, benchmarks, or manual verification steps.
+   Run the defined tests, evals, checks, builds, benchmarks, or manual verification steps. Capture
+   machine-readable results when possible.
 
 6. Compare
-   Compare results against the baseline and the Goal Contract.
-   Identify improvement, regression, or no meaningful change.
+   Compare results against the baseline and the Goal Contract. Identify improvement, regression, or
+   no meaningful change. Protected metrics must not fall below their threshold or tolerance.
 
 7. Decide
-   - If the Goal is satisfied, stop and report completion evidence.
-   - If the patch improved progress but the Goal is not satisfied, continue with the next smallest
-     patch.
-   - If the patch failed or regressed protected behavior, revert or adjust before continuing.
+   - If the Goal is satisfied and the ratchet gate passes, stop and report completion evidence.
+   - If the patch improved progress, the ratchet gate passes, and the Goal is not satisfied,
+     continue with the next smallest patch.
+   - If the patch failed or regressed protected behavior, roll back to the rollback point before
+     continuing unless the user explicitly asks to keep the broken state for inspection.
    - If no defensible path remains, stop and report the blocker, attempted paths, evidence, and what
      input would unlock progress.
+
+
+## Baseline and Ratchet Gate Requirements
+
+For repair, optimization, performance, quality, or multi-step improvement tasks, the loop must have a
+baseline gate before any non-trivial patch is accepted.
+
+A baseline gate should include:
+
+- baseline command: the command or script that measures the current state
+- baseline artifact: a checked-in file, generated report, log, snapshot, or recorded metric set
+- protected metrics: values that must not regress, such as test pass count, error count, latency,
+  throughput, bundle size, win-rate bounds, safety score, or behavior invariants
+- tolerance: explicit allowed drift for noisy metrics, especially timing and benchmark results
+- rollback method: git restore, revert commit, patch backup, file snapshot, config version rollback,
+  or a clearly documented manual rollback path
+- promotion rule: when the new result is allowed to replace the baseline
+
+If a task has no existing baseline, create the smallest useful baseline first. Do not claim a Goal
+Loop is complete only because checks pass after the patch; compare the result to the baseline and
+state whether the ratchet gate accepted it.
+
+If the ratchet gate fails, default to rollback. Keep the failed patch only when rollback is unsafe,
+impossible, or the user explicitly asks to inspect the failure.
 
 ## Loop Requirements
 
@@ -107,6 +139,7 @@ Each iteration must produce at least one of:
 Do not continue if:
 
 - the next step would modify Stable Core without required review
+- no baseline or rollback point exists for a non-trivial improvement patch
 - verification cannot be run and no acceptable fallback exists
 - the task requires credentials, production access, or external approval not available
 - repeated iterations are not improving evidence
@@ -142,7 +175,11 @@ patch:
   risk_level:
   tests_added:
   fitness_checks:
+  baseline_artifact:
+  comparison_result:
+  ratchet_gate:
   rollback_plan:
+  rollback_trigger:
 ```
 
 ## Output Requirements
@@ -157,7 +194,10 @@ ROD Goal Loop Summary:
 - Surface:
 - Risk:
 - Iterations:
+- Baseline:
 - Verification:
+- Comparison:
+- Ratchet gate:
 - Completion evidence:
 - Rollback:
 - Remaining gaps:
@@ -180,11 +220,13 @@ Do not write long process commentary unless the user asked for it.
 Avoid:
 
 - looping without a measurable completion standard
+- accepting a non-trivial patch without a baseline, comparison, and rollback point
 - continuing after repeated verification failures without a new hypothesis
 - treating activity as progress
 - expanding scope during a Goal Loop without reason
 - skipping rollback after a failed patch
 - declaring completion without evidence
+- declaring completion from post-change checks only, without comparing against baseline
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
 - making large rewrites before protecting the baseline
@@ -196,6 +238,7 @@ When uncertain:
 - Prefer evidence over assumption.
 - Prefer one focused patch per iteration.
 - Prefer rollback over accumulated broken state.
+- Prefer creating a small baseline gate before optimizing or improving behavior.
 - Prefer adding a failing test before fixing a bug.
 - Prefer completing the user's Goal over broad cleanup.
 - Prefer stopping with a clear blocker over blind iteration.

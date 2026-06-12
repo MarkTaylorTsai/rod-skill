@@ -82,12 +82,16 @@ Do not hide evolvable behavior inside scattered imperative code unless there is 
 The default architecture should make future AI-generated patches smaller, safer, easier to evaluate,
 and easier to roll back.
 
+For optimization or measurable improvement work, switch to ROD Goal Loop and establish a baseline,
+comparison rule, and rollback point before accepting behavior changes.
+
 ## Non-Negotiable Rules
 
 - Separate Stable Core from Evolvable Surfaces.
 - Prefer declarative, versioned surfaces.
 - Every evolvable surface needs a fitness check.
 - Every meaningful patch must be reversible.
+- Baseline gates are required for non-trivial improvement loops.
 - Failed cases should be able to become regression tests.
 - AI must not bypass gates.
 - Do not expose secrets or sensitive data.
