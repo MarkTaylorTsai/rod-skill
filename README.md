@@ -1,27 +1,29 @@
 # ROD Skill — Ratchet-Oriented Development
 
-ROD（Ratchet-Oriented Development）是一個可整合到 AI Agent / Skill / Manifest 系統中的開發技能，用來協助新專案與既有專案用「可驗證、可回滾、可逐步提升」的方式進行軟體修改。
+[繁體中文](README.zh-TW.md)
 
-核心精神是：**AI 可以提出修改，但 fitness checks 必須證明修改有效，policy 必須允許，release 必須可回滾，baseline 只能往前推進。**
+ROD (Ratchet-Oriented Development) is a development skill for AI Agent / Skill / Manifest systems. It helps new and existing projects make software changes in a way that is verifiable, reversible, observable, and safe to improve over time.
 
-這個 repo 將 ROD Skill 包裝成可下載、可驗證、可整合的開源專案，包含：
+Core principle: **AI may propose. Fitness must prove. Policy must permit. Release must be reversible. Baseline only moves forward.**
 
-- `SKILL.md`：完整技能說明與操作規則。
-- `skill.json`：標準化 Manifest，供 Agent 平台或整合器讀取。
-- `src/rod_skill/`：Manifest 載入、環境變數替換與基本驗證工具。
-- `tests/`：針對 Manifest 與環境變數替換的測試。
-- `config/`：預設設定範例。
+This repository packages the ROD Skill as an open-source project that can be downloaded, validated, and integrated into agent runtimes. It includes:
 
-## 核心功能
+- `SKILL.md`: the full skill instructions and operating rules.
+- `skill.json`: a standardized manifest for agent platforms and integrators.
+- `src/rod_skill/`: helper utilities for manifest loading, environment variable substitution, and basic validation.
+- `tests/`: tests for manifest validation and environment variable substitution.
+- `config/`: default configuration examples.
 
-- 協助 AI Agent 區分 **Stable Core** 與 **Evolvable Surfaces**。
-- 將有意義的改動轉換成小型、可觀察、可測試、可回滾的 patch。
-- 對高風險區域採用 Strict Mode，例如 auth、permission、secrets、資料刪除、migration、release gate。
-- 要求 prompt、workflow、RAG/KAG、policy、config、AI 輸出等行為改動具備 fitness checks。
-- 支援 bug fix 轉換為 regression test 的工作模式。
-- 提供 Manifest 驗證 CLI，方便整合前先檢查結構是否完整。
+## Core Features
 
-## 專案目錄結構
+- Helps AI agents separate **Stable Core** from **Evolvable Surfaces**.
+- Turns meaningful changes into small, observable, testable, and reversible patches.
+- Uses Strict Mode for high-risk areas such as auth, permissions, secrets, data deletion, migrations, and release gates.
+- Requires behavior-changing prompts, workflows, RAG/KAG settings, policies, configs, and AI outputs to have fitness checks.
+- Encourages bug fixes to become regression tests.
+- Provides a manifest validation CLI for checking integrations before use.
+
+## Directory Structure
 
 ```text
 rod-skill/
@@ -31,7 +33,8 @@ rod-skill/
 ├── config/
 │   └── rod.defaults.json
 ├── docs/
-│   └── integration.md
+│   ├── integration.md
+│   └── integration.zh-TW.md
 ├── src/
 │   └── rod_skill/
 │       ├── __init__.py
@@ -45,73 +48,74 @@ rod-skill/
 ├── .gitignore
 ├── LICENSE
 ├── README.md
+├── README.zh-TW.md
 ├── SKILL.md
 ├── pyproject.toml
 └── skill.json
 ```
 
-## 安裝與設定
+## Installation and Setup
 
-### 1. 複製專案
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/MarkTaylorTsai/rod-skill.git
 cd rod-skill
 ```
 
-### 2. 建立 Python 虛擬環境
+### 2. Create a Python virtual environment
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. 安裝套件
+### 3. Install the package
 
-一般使用：
+For normal use:
 
 ```bash
 pip install -e .
 ```
 
-開發與測試：
+For development and tests:
 
 ```bash
 pip install -e '.[dev]'
 pytest -q
 ```
 
-### 4. 驗證 Manifest
+### 4. Validate the manifest
 
 ```bash
 rod-skill validate skill.json
 ```
 
-或：
+Or:
 
 ```bash
 python -m rod_skill.cli validate skill.json
 ```
 
-## 安全提示：環境變數與敏感憑證
+## Security Notice: Environment Variables and Sensitive Credentials
 
-請不要把 API Key、Token、私鑰、帳密、production endpoint、內部路徑或任何敏感資訊寫死在 `skill.json`、`SKILL.md`、程式碼或 README 中。
+Do not hardcode API keys, tokens, private keys, passwords, production endpoints, internal paths, or any sensitive information in `skill.json`, `SKILL.md`, source code, or README files.
 
-建議做法：
+Recommended practice:
 
-1. 將敏感資訊放在本機 `.env` 或部署平台的 Secrets / Environment Variables。
-2. 將 `.env` 加入 `.gitignore`，不要提交到 Git。
-3. 專案中只提交 `.env.example`，用來提示需要哪些變數，但不要填真實值。
-4. 在 Manifest 或外部 config 中使用 `${ENV_VAR}` 或 `${ENV_VAR:-default}` 形式，讓整合器於執行時替換。
+1. Store sensitive values in a local `.env` file or in your deployment platform's Secrets / Environment Variables.
+2. Add `.env` to `.gitignore` and never commit it.
+3. Commit only `.env.example` to document required variables without real values.
+4. Use `${ENV_VAR}` or `${ENV_VAR:-default}` in manifests or external config so the integration layer can substitute values at runtime.
 
-範例：
+Example:
 
 ```bash
 cp .env.example .env
-# 編輯 .env，但不要提交它
+# Edit .env, but do not commit it.
 ```
 
-Linux / macOS 可用：
+On Linux / macOS:
 
 ```bash
 set -a
@@ -119,51 +123,51 @@ source .env
 set +a
 ```
 
-本專案目前不需要任何 API Key。若你在自己的 Agent 平台中加入外部 API、模型供應商或私有資料庫，請一律使用環境變數載入，不要 hardcode。
+This project does not require any API key by default. If your own agent platform adds external APIs, model providers, private databases, or private services, always load credentials from environment variables or a secret manager. Never hardcode them.
 
-## 使用範例
+## Usage Examples
 
-### 範例一：要求 Agent 修改一段會影響行為的程式
+### Example 1: Fix behavior-changing authentication logic
 
 **Input**
 
 ```text
-請修正登入流程中偶爾允許未驗證使用者進入 dashboard 的問題。
+Fix the login flow bug where an unauthenticated user can sometimes access the dashboard.
 ```
 
-**ROD Skill 期望 Output 摘要**
+**Expected ROD Skill Output Summary**
 
 ```text
 ROD Summary:
-- Changed: 修正 dashboard route 的驗證條件，未驗證使用者會被導向登入頁。
+- Changed: Fixed the dashboard route guard so unauthenticated users are redirected to login.
 - Surface: permission / code
 - Risk: high
-- Fitness: 新增 allow/deny tests，確認已驗證使用者可進入、未驗證使用者不可進入。
-- Rollback: revert 該 route guard patch 與新增測試。
-- Remaining gaps: 尚未加入 audit event，可於下一個 patch 補上。
+- Fitness: Added allow/deny tests to verify authenticated users can enter and unauthenticated users cannot.
+- Rollback: Revert the route guard patch and the added tests.
+- Remaining gaps: Audit event coverage has not been added yet and can be handled in a follow-up patch.
 ```
 
-### 範例二：要求 Agent 調整 RAG 檢索設定
+### Example 2: Adjust RAG retrieval settings
 
 **Input**
 
 ```text
-把法律問答的 top_k 從 5 調到 10，看看回答是否更完整。
+Change legal QA top_k from 5 to 10 and check whether answers become more complete.
 ```
 
-**ROD Skill 期望 Output 摘要**
+**Expected ROD Skill Output Summary**
 
 ```text
 ROD Summary:
-- Changed: 將 rag_config.legal_qa.top_k 由 5 調整為 10。
+- Changed: Updated rag_config.legal_qa.top_k from 5 to 10.
 - Surface: rag_config
 - Risk: medium
-- Fitness: 執行 retrieval eval，檢查 Recall@K、citation support、latency 與 unsupported claim rate。
-- Rollback: 將 top_k 還原為 5。
-- Remaining gaps: 需要累積更多 jurisdiction-specific golden cases。
+- Fitness: Ran retrieval evals for Recall@K, citation support, latency, and unsupported claim rate.
+- Rollback: Restore top_k to 5.
+- Remaining gaps: More jurisdiction-specific golden cases are needed.
 ```
 
-### 範例三：驗證 skill.json 並輸出解析後 Manifest
+### Example 3: Render the resolved manifest
 
 **Input**
 
@@ -185,26 +189,26 @@ rod-skill render skill.json
 }
 ```
 
-實際輸出會包含完整 Manifest 欄位；若 Manifest 中含有 `${ROD_SKILL_MODE:-standard}` 這類設定，工具會使用目前環境變數或預設值解析。
+The actual output includes the complete manifest. If the manifest contains values such as `${ROD_SKILL_MODE:-standard}`, the helper resolves them using the current environment or the provided default value.
 
-## 整合方式
+## Integration
 
-1. 將 `skill.json` 與 `SKILL.md` 複製到你的 Agent 平台指定的 skills 目錄。
-2. 讓 Agent runtime 讀取 `skill.json` 的 `entrypoint.path`。
-3. 將 `SKILL.md` 的內容注入為系統技能、開發流程或工具使用規範。
-4. 在整合層保留環境變數替換，不要在 Manifest 中寫入密鑰。
+1. Copy `skill.json` and `SKILL.md` into the skills directory used by your agent platform.
+2. Let the agent runtime read `entrypoint.path` from `skill.json`.
+3. Inject the content of `SKILL.md` as a system skill, development workflow, or operating guideline.
+4. Keep environment variable substitution in the integration layer. Do not put secrets directly in the manifest.
 
-更多細節請見 [`docs/integration.md`](docs/integration.md)。
+See [`docs/integration.md`](docs/integration.md) for more details.
 
-## 開發
+## Development
 
-執行測試：
+Run tests:
 
 ```bash
 pytest -q
 ```
 
-執行 Manifest 驗證：
+Validate the manifest:
 
 ```bash
 rod-skill validate skill.json
