@@ -1,0 +1,96 @@
+{
+  "manifest_version": "1.0.0",
+  "id": "rod",
+  "name": "ROD",
+  "display_name": "ROD — Ratchet-Oriented Development",
+  "version": "0.1.0",
+  "description": "Use Ratchet-Oriented Development for meaningful software work in new or existing projects, especially AI systems, RAG/KAG, prompts, workflows, configs, policies, release gates, migrations, refactors, and behavior-changing code. Use lightweight mode for tiny low-risk edits.",
+  "license": "MIT",
+  "language": "en",
+  "tags": [
+    "ai-agent",
+    "development-process",
+    "ratchet-oriented-development",
+    "software-quality",
+    "rag",
+    "kag",
+    "workflow",
+    "policy",
+    "release-gates"
+  ],
+  "entrypoint": {
+    "type": "markdown",
+    "path": "SKILL.md"
+  },
+  "runtime": {
+    "type": "none",
+    "requires_network": false,
+    "requires_filesystem_write": false,
+    "requires_shell": false
+  },
+  "configuration": {
+    "mode": "${ROD_SKILL_MODE:-standard}",
+    "log_level": "${ROD_SKILL_LOG_LEVEL:-INFO}",
+    "defaults_path": "${ROD_SKILL_DEFAULTS_PATH:-config/rod.defaults.json}",
+    "environment_variables": [
+      {
+        "name": "ROD_SKILL_MODE",
+        "required": false,
+        "default": "standard",
+        "description": "Default operating mode hint: lightweight, standard, or strict."
+      },
+      {
+        "name": "ROD_SKILL_LOG_LEVEL",
+        "required": false,
+        "default": "INFO",
+        "description": "Log level for local helper tools."
+      },
+      {
+        "name": "ROD_SKILL_DEFAULTS_PATH",
+        "required": false,
+        "default": "config/rod.defaults.json",
+        "description": "Path to external defaults used by local tooling."
+      }
+    ]
+  },
+  "security": {
+    "secrets_required": [],
+    "secret_handling_policy": "Do not hardcode secrets, tokens, API keys, credentials, private keys, seed phrases, production data, private user data, or sensitive payloads. Use environment variables or the host platform's secret manager. Never commit .env files.",
+    "data_handling": {
+      "stores_user_data": false,
+      "logs_sensitive_data": false,
+      "requires_redaction": true
+    }
+  },
+  "capabilities": [
+    "classify_change_risk",
+    "separate_stable_core_from_evolvable_surfaces",
+    "define_fitness_checks",
+    "design_reversible_patches",
+    "summarize_rod_guided_work"
+  ],
+  "files": [
+    {
+      "path": "SKILL.md",
+      "role": "instructions",
+      "required": true
+    },
+    {
+      "path": "config/rod.defaults.json",
+      "role": "configuration_defaults",
+      "required": false
+    }
+  ],
+  "compatibility": {
+    "agent_platforms": [
+      "generic-ai-agent",
+      "manifest-based-agent-runtime"
+    ],
+    "minimum_python_for_helpers": "3.10"
+  },
+  "source": {
+    "repository": "https://github.com/MarkTaylorTsai/rod-skill",
+    "homepage": "https://github.com/MarkTaylorTsai/rod-skill",
+    "issues": "https://github.com/MarkTaylorTsai/rod-skill/issues"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "default_mode": "standard",
+  "risk_levels": ["low", "medium", "high"],
+  "surface_types": [
+    "code",
+    "config",
+    "prompt",
+    "rag_config",
+    "kag_schema",
+    "workflow",
+    "router",
+    "policy",
+    "permission",
+    "database_schema",
+    "migration",
+    "infra",
+    "ui",
+    "test",
+    "eval",
+    "documentation",
+    "observability",
+    "release_gate"
+  ],
+  "protected_metrics": [
+    "correctness",
+    "safety",
+    "latency",
+    "cost",
+    "recall",
+    "grounding",
+    "permission_behavior",
+    "privacy",
+    "user_trust"
+  ],
+  "summary_template": {
+    "heading": "ROD Summary",
+    "fields": ["Changed", "Surface", "Risk", "Fitness", "Rollback", "Remaining gaps"]
+  }
+}
