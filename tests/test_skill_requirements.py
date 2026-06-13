@@ -36,6 +36,12 @@ def test_goal_loop_requires_baseline_ratchet_and_rollback_gate() -> None:
         "Performance, reliability, and resource metrics",
         "Observability and rollback metrics",
         "Minimum expectation: use at least five applicable metric categories for a new project",
+        "Gate Enforcement Requirements",
+        "Recording metrics is not enough",
+        "Every protected metric must have an explicit gate rule",
+        "rollback coverage gate",
+        "rollback drill gate",
+        "Do not mark a ratchet gate as accepted when the evaluation status is `error`",
     ]
 
     for phrase in required_phrases:
@@ -52,6 +58,7 @@ def test_root_and_architecture_route_improvement_work_to_goal_loop_gate() -> Non
         assert "rollback point" in text
         assert "rollback coverage" in text
         assert "Metric gates must protect behavior, contracts, scope, safety, and rollback evidence" in text
+        assert "Required gates must block acceptance" in text
 
 
 def test_goal_loop_rejects_baseline_only_rollback_for_project_patches() -> None:
@@ -73,3 +80,15 @@ def test_goal_loop_rejects_coarse_test_count_only_metrics() -> None:
     assert "behavior invariants" in text
     assert "deterministic scenarios" in text
     assert "rollback coverage" in text
+
+
+def test_goal_loop_requires_required_gates_to_block_acceptance() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    assert "Recording metrics is not enough." in text
+    assert "required gate fails" in text
+    assert "required metrics" in text
+    assert "recorded as false" in text
+    assert "rollback coverage" in text
+    assert "rollback drill" in text
+    assert "recording a failed required metric but still marking the ratchet gate as accepted" in text

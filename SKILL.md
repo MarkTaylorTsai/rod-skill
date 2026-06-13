@@ -95,6 +95,7 @@ behavior changes.
 - Baseline gates are required for non-trivial improvement loops.
 - Rollback coverage must include the files or artifacts a patch may modify.
 - Metric gates must protect behavior, contracts, scope, safety, and rollback evidence, not only test counts.
+- Required gates must block acceptance when protected metrics fail or cannot be evaluated.
 - Failed cases should be able to become regression tests.
 - AI must not bypass gates.
 - Do not expose secrets or sensitive data.

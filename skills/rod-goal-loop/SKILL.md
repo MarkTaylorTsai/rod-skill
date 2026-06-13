@@ -183,6 +183,35 @@ three applicable categories for a small patch. The metric set must include behav
 deterministic scenarios, rollback coverage, and scope/dependency guardrails unless explicitly
 justified.
 
+
+## Gate Enforcement Requirements
+
+Recording metrics is not enough. Every protected metric must have an explicit gate rule, comparison
+operator, expected threshold, actual value, and pass/fail result in the ratchet report. A ratchet
+report must not be accepted when any required gate fails, is missing, or cannot be evaluated.
+
+For new projects or new ratchet tooling, these gates are required unless explicitly impossible and
+justified:
+
+- evaluation status gate: the evaluation itself must complete successfully
+- correctness gate: required tests, evals, checks, or builds must pass
+- behavior invariant gate: protected invariants must be true
+- deterministic scenario gate: at least one representative fixed-input scenario must match expected
+  outputs or state summaries
+- interface contract gate: required files, exports, schemas, routes, configs, or public contracts must
+  be present and valid
+- scope and dependency gate: changes must stay inside the declared boundary and must not add
+  undeclared dependencies, external assets, network calls, or generated artifacts
+- safety and policy gate: secrets, sensitive data handling, permissions, destructive operations, and
+  policy boundaries must remain clean
+- rollback coverage gate: rollback coverage must include every file or artifact the patch may modify
+- rollback drill gate: new rollback tooling must be proven with a temporary failure or equivalent
+  restore verification before the final report is accepted
+
+Do not mark a ratchet gate as accepted when the evaluation status is `error`, when required metrics
+are recorded as false, or when rollback coverage or rollback drill is false. Optional or noisy metrics
+may produce warnings, but required gates must block acceptance.
+
 ## Loop Requirements
 
 Do not loop blindly.
@@ -238,6 +267,8 @@ patch:
   baseline_artifact:
   comparison_result:
   ratchet_gate:
+  required_gates:
+  failed_gates:
   rollback_plan:
   rollback_coverage:
   rollback_trigger:
@@ -261,6 +292,8 @@ ROD Goal Loop Summary:
 - Verification:
 - Comparison:
 - Ratchet gate:
+- Required gates:
+- Failed gates:
 - Completion evidence:
 - Rollback:
 - Rollback coverage:
@@ -293,6 +326,7 @@ Avoid:
 - declaring completion without evidence
 - declaring completion from post-change checks only, without comparing against baseline
 - defining metrics that only count tests without protecting behavior, contracts, scope, and rollback
+- recording a failed required metric but still marking the ratchet gate as accepted
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
 - making large rewrites before protecting the baseline
@@ -307,6 +341,7 @@ When uncertain:
 - Prefer creating a small baseline gate before optimizing or improving behavior.
 - Prefer full project file snapshots when the project is not yet in git.
 - Prefer detailed protected metrics over coarse pass/fail smoke checks.
+- Prefer explicit required-gate failures over optimistic acceptance.
 - Prefer adding a failing test before fixing a bug.
 - Prefer completing the user's Goal over broad cleanup.
 - Prefer stopping with a clear blocker over blind iteration.
