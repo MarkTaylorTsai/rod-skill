@@ -71,7 +71,8 @@ The default architecture should make future AI-generated patches smaller, safer,
 and easier to roll back.
 
 For optimization or measurable improvement work, switch to ROD Goal Loop and establish a baseline,
-comparison rule, rollback point, and rollback coverage before accepting behavior changes.
+comparison rule, rollback point, rollback coverage, and detailed protected metric set before accepting
+behavior changes.
 
 ## Non-Negotiable Rules
 
@@ -81,6 +82,7 @@ comparison rule, rollback point, and rollback coverage before accepting behavior
 - Every meaningful patch must be reversible.
 - Baseline gates are required for non-trivial improvement loops.
 - Rollback coverage must include the files or artifacts a patch may modify.
+- Metric gates must protect behavior, contracts, scope, safety, and rollback evidence, not only test counts.
 - Failed cases should be able to become regression tests.
 - AI must not bypass gates.
 - Do not expose secrets or sensitive data.

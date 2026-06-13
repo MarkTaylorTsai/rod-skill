@@ -3,7 +3,7 @@
   "id": "rod-architecture",
   "name": "ROD Architecture",
   "display_name": "ROD Architecture — Ratchet-Oriented Architecture",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Apply Ratchet-Oriented Architecture when creating new systems or making structural software changes. Use this skill to separate Stable Core from Evolvable Surfaces and make software observable, versioned, testable, reversible, and safe for AI-assisted evolution.",
   "license": "MIT",
   "language": "en",

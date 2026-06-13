@@ -21,7 +21,7 @@ def test_load_repository_manifest() -> None:
     manifest = load_manifest(Path("skill.json"))
 
     assert manifest["id"] == "rod"
-    assert manifest["version"] == "0.4.0"
+    assert manifest["version"] == "0.5.0"
     assert manifest["entrypoint"] == {"type": "markdown", "path": "SKILL.md"}
     assert manifest["runtime"]["requires_network"] is False
     assert manifest["security"]["secrets_required"] == []
@@ -34,7 +34,7 @@ def test_load_all_skill_manifests() -> None:
         manifest = load_manifest(path)
         entrypoint = manifest["entrypoint"]
 
-        assert manifest["version"] == "0.4.0"
+        assert manifest["version"] == "0.5.0"
         assert entrypoint["type"] == "markdown"
         assert entrypoint["path"].endswith("SKILL.md")
         assert Path(entrypoint["path"]).is_file()
@@ -62,7 +62,7 @@ def test_validate_manifest_rejects_missing_required_field() -> None:
                 "manifest_version": "1.0.0",
                 "id": "rod",
                 "name": "ROD",
-                "version": "0.4.0",
+                "version": "0.5.0",
                 "entrypoint": {"type": "markdown", "path": "SKILL.md"},
                 "security": {"secret_handling_policy": "Use env vars."},
             }

@@ -134,6 +134,55 @@ project files, the rollback point must restore those project files, not only `ba
 logs, or metric artifacts. A rollback method that restores only the baseline artifact is acceptable
 only when the patch itself changes only the baseline artifact.
 
+
+## Metric Quality Requirements
+
+A ratchet gate must measure more than whether commands exit successfully. For non-trivial work,
+define a metric set that is detailed enough to protect the system's actual behavior. Do not rely
+only on test count, pass count, pass rate, or a single smoke check.
+
+A strong, portable metric set should include the applicable categories below. If a category is not
+applicable, state why in the baseline artifact or summary.
+
+1. Correctness and verification metrics
+   Capture tests passed, tests failed, eval cases passed, command status, syntax or type-check status,
+   build status, and explicit error counts.
+
+2. Behavior invariant metrics
+   Capture domain-neutral invariants that must remain true, such as valid state transitions, resource
+   conservation, authorization boundaries, data integrity, id uniqueness, limit enforcement, and
+   impossible-state prevention.
+
+3. Deterministic scenario metrics
+   Capture at least one representative golden path, edge case, or replayable scenario with fixed
+   inputs. Record expected outputs or state summaries, not only that the scenario ran.
+
+4. Interface and integration contract metrics
+   Capture public API shape, schema validity, event names, input/output contracts, routing contracts,
+   config contract, or artifact presence expected by users or downstream systems.
+
+5. Scope, dependency, and artifact guardrails
+   Capture file count, source size, dependency count, lockfile changes, external network or asset
+   usage, generated files, and whether changes stayed inside the permitted boundary.
+
+6. Safety, security, privacy, and policy metrics
+   Capture secret-scan status, unsafe permission changes, destructive-operation exposure, private data
+   handling, access-control invariants, or other protected safety rules relevant to the project.
+
+7. Performance, reliability, and resource metrics
+   Capture latency, throughput, memory, bundle size, startup time, benchmark score, retry/error rate,
+   or simulation speed when relevant. Noisy metrics require explicit tolerance.
+
+8. Observability and rollback metrics
+   Capture baseline artifact path, rollback coverage, rollback drill status, latest report path, and
+   promotion status. For new projects or new ratchet tooling, run a rollback drill before declaring
+   the gate complete.
+
+Minimum expectation: use at least five applicable metric categories for a new project, and at least
+three applicable categories for a small patch. The metric set must include behavior invariants,
+deterministic scenarios, rollback coverage, and scope/dependency guardrails unless explicitly
+justified.
+
 ## Loop Requirements
 
 Do not loop blindly.
@@ -184,6 +233,8 @@ patch:
   risk_level:
   tests_added:
   fitness_checks:
+  metric_categories:
+  protected_metrics:
   baseline_artifact:
   comparison_result:
   ratchet_gate:
@@ -205,6 +256,8 @@ ROD Goal Loop Summary:
 - Risk:
 - Iterations:
 - Baseline:
+- Metric categories:
+- Protected metrics:
 - Verification:
 - Comparison:
 - Ratchet gate:
@@ -239,6 +292,7 @@ Avoid:
 - skipping rollback after a failed patch
 - declaring completion without evidence
 - declaring completion from post-change checks only, without comparing against baseline
+- defining metrics that only count tests without protecting behavior, contracts, scope, and rollback
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
 - making large rewrites before protecting the baseline
@@ -252,6 +306,7 @@ When uncertain:
 - Prefer rollback over accumulated broken state.
 - Prefer creating a small baseline gate before optimizing or improving behavior.
 - Prefer full project file snapshots when the project is not yet in git.
+- Prefer detailed protected metrics over coarse pass/fail smoke checks.
 - Prefer adding a failing test before fixing a bug.
 - Prefer completing the user's Goal over broad cleanup.
 - Prefer stopping with a clear blocker over blind iteration.

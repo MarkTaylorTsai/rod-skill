@@ -26,6 +26,16 @@ def test_goal_loop_requires_baseline_ratchet_and_rollback_gate() -> None:
         "comparison_result",
         "rollback_coverage",
         "rollback_trigger",
+        "Metric Quality Requirements",
+        "Correctness and verification metrics",
+        "Behavior invariant metrics",
+        "Deterministic scenario metrics",
+        "Interface and integration contract metrics",
+        "Scope, dependency, and artifact guardrails",
+        "Safety, security, privacy, and policy metrics",
+        "Performance, reliability, and resource metrics",
+        "Observability and rollback metrics",
+        "Minimum expectation: use at least five applicable metric categories for a new project",
     ]
 
     for phrase in required_phrases:
@@ -41,6 +51,7 @@ def test_root_and_architecture_route_improvement_work_to_goal_loop_gate() -> Non
         assert "comparison rule" in text
         assert "rollback point" in text
         assert "rollback coverage" in text
+        assert "Metric gates must protect behavior, contracts, scope, safety, and rollback evidence" in text
 
 
 def test_goal_loop_rejects_baseline_only_rollback_for_project_patches() -> None:
@@ -49,3 +60,16 @@ def test_goal_loop_rejects_baseline_only_rollback_for_project_patches() -> None:
     assert "A baseline-only rollback is not enough for code or configuration patches." in text
     assert "restores only the baseline artifact" in text
     assert "only when the patch itself changes only the baseline artifact" in text
+
+
+def test_goal_loop_rejects_coarse_test_count_only_metrics() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    assert "Do not rely" in text
+    assert "test count" in text
+    assert "pass count" in text
+    assert "single smoke check" in text
+    assert "defining metrics that only count tests" in text
+    assert "behavior invariants" in text
+    assert "deterministic scenarios" in text
+    assert "rollback coverage" in text
