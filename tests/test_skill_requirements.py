@@ -42,6 +42,9 @@ def test_goal_loop_requires_baseline_ratchet_and_rollback_gate() -> None:
         "rollback coverage gate",
         "rollback drill gate",
         "Do not mark a ratchet gate as accepted when the evaluation status is `error`",
+        "Standard Tooling Entry Points",
+        "Required standard entry points for new projects",
+        "`ratchet` can only be run indirectly through `evaluate`",
     ]
 
     for phrase in required_phrases:
@@ -59,6 +62,7 @@ def test_root_and_architecture_route_improvement_work_to_goal_loop_gate() -> Non
         assert "rollback coverage" in text
         assert "Metric gates must protect behavior, contracts, scope, safety, and rollback evidence" in text
         assert "Required gates must block acceptance" in text
+        assert "standard test/check/evaluate/baseline/snapshot/ratchet/rollback entry points" in text
 
 
 def test_goal_loop_rejects_baseline_only_rollback_for_project_patches() -> None:
@@ -92,3 +96,14 @@ def test_goal_loop_requires_required_gates_to_block_acceptance() -> None:
     assert "rollback coverage" in text
     assert "rollback drill" in text
     assert "recording a failed required metric but still marking the ratchet gate as accepted" in text
+
+
+def test_goal_loop_requires_standard_entry_points_for_new_projects() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    assert "Standard Tooling Entry Points" in text
+    for command in ["test", "check", "evaluate", "baseline", "snapshot", "ratchet", "rollback"]:
+        assert f"`{command}`" in text
+    assert "must not replace the standard names" in text
+    assert "Do not declare a new project complete" in text
+    assert "non-standard command" in text

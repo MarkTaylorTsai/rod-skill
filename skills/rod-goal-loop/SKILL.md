@@ -198,8 +198,8 @@ justified:
 - behavior invariant gate: protected invariants must be true
 - deterministic scenario gate: at least one representative fixed-input scenario must match expected
   outputs or state summaries
-- interface contract gate: required files, exports, schemas, routes, configs, or public contracts must
-  be present and valid
+- interface contract gate: required files, exports, schemas, routes, configs, public contracts, and
+  standard tooling entry points must be present and valid
 - scope and dependency gate: changes must stay inside the declared boundary and must not add
   undeclared dependencies, external assets, network calls, or generated artifacts
 - safety and policy gate: secrets, sensitive data handling, permissions, destructive operations, and
@@ -211,6 +211,34 @@ justified:
 Do not mark a ratchet gate as accepted when the evaluation status is `error`, when required metrics
 are recorded as false, or when rollback coverage or rollback drill is false. Optional or noisy metrics
 may produce warnings, but required gates must block acceptance.
+
+
+## Standard Tooling Entry Points
+
+For new software projects, ratchet tooling must expose a consistent command surface so humans and
+automation can verify the same workflow across domains. Prefer package scripts when the project uses
+Node or has a `package.json`; otherwise provide equivalent commands in a `Makefile`, taskfile, or
+documented shell scripts.
+
+Required standard entry points for new projects:
+
+- `test`: run deterministic tests or eval cases
+- `check`: run syntax, type, lint, smoke, or load checks that are broader than tests alone
+- `evaluate`: produce machine-readable metric results without changing the baseline
+- `baseline`: create or promote the accepted baseline artifact
+- `snapshot`: create a rollback point covering the files and artifacts the next patch may modify
+- `ratchet`: compare current evaluation against the baseline, enforce required gates, and rollback on
+  required-gate failure when a rollback point exists
+- `rollback`: restore the most recent rollback point
+
+The interface contract gate must verify these entry points exist and are runnable. A project may add
+extra commands such as `promote`, `drill`, or `report`, but those must not replace the standard names.
+If a runtime cannot support these exact script names, the baseline artifact and summary must document
+the equivalent command mapping and the ratchet report must mark the mapping as an interface contract.
+
+Do not declare a new project complete if `ratchet` can only be run indirectly through `evaluate` or a
+non-standard command. The standard `ratchet` entry point must exist unless explicitly impossible and
+justified.
 
 ## Loop Requirements
 
@@ -268,6 +296,7 @@ patch:
   comparison_result:
   ratchet_gate:
   required_gates:
+  standard_entry_points:
   failed_gates:
   rollback_plan:
   rollback_coverage:
@@ -293,6 +322,7 @@ ROD Goal Loop Summary:
 - Comparison:
 - Ratchet gate:
 - Required gates:
+- Standard entry points:
 - Failed gates:
 - Completion evidence:
 - Rollback:
@@ -327,6 +357,7 @@ Avoid:
 - declaring completion from post-change checks only, without comparing against baseline
 - defining metrics that only count tests without protecting behavior, contracts, scope, and rollback
 - recording a failed required metric but still marking the ratchet gate as accepted
+- omitting standard entry points such as `ratchet` and relying on a non-standard command instead
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
 - making large rewrites before protecting the baseline
@@ -342,6 +373,7 @@ When uncertain:
 - Prefer full project file snapshots when the project is not yet in git.
 - Prefer detailed protected metrics over coarse pass/fail smoke checks.
 - Prefer explicit required-gate failures over optimistic acceptance.
+- Prefer standard command names over tool-specific aliases.
 - Prefer adding a failing test before fixing a bug.
 - Prefer completing the user's Goal over broad cleanup.
 - Prefer stopping with a clear blocker over blind iteration.

@@ -3,7 +3,7 @@
   "id": "rod",
   "name": "ROD",
   "display_name": "ROD — Ratchet-Oriented Development",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Root entry point for the ROD skill pack. Use it to select between Ratchet-Oriented Architecture for structural design and ROD Goal Loop for measurable repair, optimization, and verification tasks while preserving observable, testable, reversible change discipline.",
   "license": "MIT",
   "language": "en",

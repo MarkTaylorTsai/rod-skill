@@ -3,7 +3,7 @@
   "id": "rod-goal-loop",
   "name": "ROD Goal Loop",
   "display_name": "ROD Goal Loop — Ratchet-Oriented Goal Execution",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Use the ROD Goal Loop for user-defined repair, optimization, verification, and improvement tasks. The agent must iterate through observable, reversible patches until the Goal Contract is satisfied, blocked, unsafe, or out of budget.",
   "license": "MIT",
   "language": "en",

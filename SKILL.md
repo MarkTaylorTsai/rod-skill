@@ -96,6 +96,7 @@ behavior changes.
 - Rollback coverage must include the files or artifacts a patch may modify.
 - Metric gates must protect behavior, contracts, scope, safety, and rollback evidence, not only test counts.
 - Required gates must block acceptance when protected metrics fail or cannot be evaluated.
+- New projects should expose standard test/check/evaluate/baseline/snapshot/ratchet/rollback entry points.
 - Failed cases should be able to become regression tests.
 - AI must not bypass gates.
 - Do not expose secrets or sensitive data.
