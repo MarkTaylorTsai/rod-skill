@@ -107,3 +107,48 @@ def test_goal_loop_requires_standard_entry_points_for_new_projects() -> None:
     assert "must not replace the standard names" in text
     assert "Do not declare a new project complete" in text
     assert "non-standard command" in text
+
+
+def test_architecture_defines_ai_system_surfaces_and_contracts() -> None:
+    text = ARCHITECTURE.read_text(encoding="utf-8")
+
+    required = [
+        "AI System Architecture Pattern",
+        "RAG",
+        "graph RAG",
+        "sub-agent spawn limits",
+        "skill manifests",
+        "workflow contract",
+        "agent contract",
+        "skill contract",
+        "loop contract",
+        "deterministic offline evals using mock providers",
+    ]
+    for phrase in required:
+        assert phrase in text
+
+
+def test_goal_loop_defines_ai_system_ratchet_gates() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    required = [
+        "AI System Ratchet Gates",
+        "Provider and model contract",
+        "Prompt and template quality",
+        "RAG retrieval quality",
+        "Graph RAG quality",
+        "Workflow quality",
+        "Agent and sub-agent safety",
+        "Skill creation quality",
+        "Loop control and self-improvement safety",
+        "Grounding, citation, and answer policy",
+        "RAG citation coverage",
+        "sub-agent spawn limits",
+        "skill manifest validation",
+        "loop stop criteria",
+        "provider",
+        "prefixes",
+        "absent",
+    ]
+    for phrase in required:
+        assert phrase in text

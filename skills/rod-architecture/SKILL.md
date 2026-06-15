@@ -126,6 +126,72 @@ For AI projects, also prefer:
 - safety/refusal tests
 - protected metric list
 
+
+## AI System Architecture Pattern
+
+When designing AI systems, keep the general ROD architecture rules and add explicit AI-specific surfaces and
+gates. The goal is not to hardcode one AI stack, but to make AI behavior observable, versioned, testable,
+reversible, and safe across RAG, graph RAG, agentic workflows, skills, and loops.
+
+Treat these as Stable Core unless intentionally isolated behind a safe evolvable surface:
+
+- identity, tenant, authorization, permission, and tool-execution boundaries
+- secret handling and provider credentials
+- data-ingestion trust boundaries and document access policy
+- retrieval authorization and source visibility rules
+- tool allowlists, destructive action guards, and human-approval gates
+- sub-agent spawn limits, budget limits, recursion limits, and loop-stop conditions
+- audit logs, trace IDs, provenance, citations, and evaluation history
+- baseline, snapshot, rollback, and promotion logic
+- PII handling, redaction, retention, and privacy policy
+
+Prefer these as Evolvable Surfaces, each with schema, owner, version, evals, traces, and rollback:
+
+- prompts, prompt templates, system messages, and prompt routing rules
+- model/provider configuration, temperature, max tokens, retry policy, and fallback policy
+- chunking, embedding, retrieval, reranking, and citation policy for RAG
+- entity extraction, relation extraction, graph schema, graph traversal, and hybrid retrieval policy
+- workflow graphs, node configs, transition rules, tool-call plans, and guardrail policies
+- agent role definitions, sub-agent manifests, spawn policy, handoff contracts, and merge policies
+- skill manifests, skill instructions, tool contracts, eval fixtures, and packaging checks
+- loop goals, iteration budgets, stop criteria, self-critique prompts, and escalation rules
+- evaluator rubrics, golden datasets, adversarial datasets, and regression fixtures
+- memory policy, summarization policy, context-packing policy, and cache policy
+
+Recommended AI project layout when applicable:
+
+```text
+/ai
+  providers/          # provider adapters and deterministic mocks
+  prompts/            # versioned prompt templates and routing
+  retrieval/          # RAG configs, chunking, indexing, reranking
+  graph/              # graph schema, extraction rules, traversal configs
+  workflows/          # workflow DAGs or state machines
+  agents/             # agent roles, sub-agent spawn policy, handoff contracts
+  skills/             # generated or project-local skills with manifests and evals
+  evals/              # golden/adversarial datasets and scoring rubrics
+  traces/             # sample traces or trace schema, not private data
+  policies/           # safety, tool, privacy, citation, and escalation policies
+/rod
+  ratchet.yaml
+  fitness/
+  snapshots/
+```
+
+For AI systems, document these contracts before accepting the architecture:
+
+- provider contract: mock provider, real provider boundary, timeout, retry, fallback, and no-secret rule
+- grounding contract: source selection, citation format, unsupported-answer behavior, and retrieval auth
+- workflow contract: states, transitions, tool calls, outputs, failure handling, and idempotency
+- agent contract: roles, permissions, spawn limits, message schema, termination, and merge strategy
+- skill contract: manifest schema, allowed tools, eval fixtures, versioning, and rollback path
+- loop contract: goal, baseline, iteration budget, stop rules, regression gates, and escalation
+
+AI system fitness should include deterministic offline evals using mock providers. Live provider calls may be
+optional integration checks, but they must not be required for the local ratchet gate unless secrets and
+network side effects are explicitly authorized by the user.
+
+
 ## Recommended ROD Artifacts
 
 When useful, use:

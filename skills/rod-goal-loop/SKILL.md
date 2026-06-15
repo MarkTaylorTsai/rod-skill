@@ -240,6 +240,70 @@ Do not declare a new project complete if `ratchet` can only be run indirectly th
 non-standard command. The standard `ratchet` entry point must exist unless explicitly impossible and
 justified.
 
+
+## AI System Ratchet Gates
+
+For AI systems, keep all standard gates and add AI-specific protected gates when applicable. The ratchet gate
+should prove that AI behavior improved or stayed safe, not merely that code executed. Use deterministic mock
+providers for local tests unless live calls are explicitly authorized.
+
+Applicable AI metric categories include:
+
+1. Provider and model contract
+   Verify mock provider determinism, real-provider boundary, timeout/retry/fallback behavior, environment-variable-only
+   credentials, no key persistence, and no live calls in local gates.
+
+2. Prompt and template quality
+   Verify prompt schema, variable validation, missing constraints, output-format hints, unsafe prompt patterns, prompt
+   injection resistance, and prompt registry versioning.
+
+3. RAG retrieval quality
+   Verify corpus/index integrity, chunk counts, retrieval precision/recall on golden questions, reranking behavior,
+   citation coverage, source authorization, unsupported-answer behavior, and retrieval traceability.
+
+4. Graph RAG quality
+   Verify entity extraction, relation extraction, graph schema validity, traversal limits, hybrid retrieval fusion,
+   graph provenance, and deterministic graph-answer scenarios.
+
+5. Workflow quality
+   Verify workflow DAG/state-machine validity, required nodes, transitions, tool-call contracts, idempotency, failure
+   paths, retries, and terminal states.
+
+6. Agent and sub-agent safety
+   Verify role manifests, spawn limits, recursion/depth limits, budget limits, permission boundaries, handoff contracts,
+   merge strategy, and audit trace completeness.
+
+7. Skill creation quality
+   Verify skill manifest schema, instruction safety, allowed tool scope, packaging checks, eval fixtures, versioning,
+   compatibility, and rollback path for generated skills.
+
+8. Loop control and self-improvement safety
+   Verify goal contract, baseline, iteration budget, stop criteria, regression detection, rollback trigger, escalation
+   path, and no blind self-modification.
+
+9. Grounding, citation, and answer policy
+   Verify citations or provenance when retrieval is used, unsupported-answer refusal, hallucination traps, PII
+   redaction, safety policy adherence, and trace IDs.
+
+For a new AI system, at least one required gate should cover each AI subsystem that exists. If the project
+contains RAG, graph RAG, workflows, agents, skills, or loops, their contracts must be part of the metric set
+and must block acceptance when false. Do not accept an AI system ratchet report when RAG citation coverage,
+graph schema validity, workflow terminal-state coverage, sub-agent spawn limits, skill manifest validation, or
+loop stop criteria fail.
+
+AI eval datasets should include:
+
+- golden-path cases that should pass
+- unsupported or out-of-corpus questions that should refuse or abstain
+- adversarial/prompt-injection cases
+- privacy/PII cases
+- deterministic workflow and agent traces
+- regression cases produced by prior failures
+
+Do not store real provider keys in baselines, snapshots, traces, eval results, or docs. Key-like provider
+prefixes should be absent from project files unless clearly masked, for example `PROVIDER_API_KEY=***`.
+
+
 ## Loop Requirements
 
 Do not loop blindly.
