@@ -98,6 +98,7 @@ behavior changes.
 - Required gates must block acceptance when protected metrics fail or cannot be evaluated.
 - New projects should expose standard test/check/evaluate/baseline/snapshot/ratchet/rollback entry points.
 - Ratchet tooling is Stable Core and must survive snapshot, rollback, cleanup, and self-checks.
+- Ratchet reports must be internally consistent; failed required gates cannot coexist with accepted decisions.
 - AI systems should add provider, retrieval, graph, workflow, agent, skill, and loop-specific gates when applicable.
 - Failed cases should be able to become regression tests.
 - AI must not bypass gates.

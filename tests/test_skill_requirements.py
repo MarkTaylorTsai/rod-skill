@@ -181,3 +181,28 @@ def test_root_and_architecture_treat_ratchet_tooling_as_stable_core() -> None:
         assert "snapshot" in text
         assert "rollback" in text
         assert "self-checks" in text
+
+
+def test_goal_loop_requires_ratchet_report_consistency_gate() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    required = [
+        "Ratchet Report Consistency Gate",
+        "ratchet report must be internally consistent",
+        "accepted` is true only when every required gate passed",
+        "accepted` is false when `requiredGatesFailed`",
+        "allGatesPassed",
+        "failed required gates and an accepted decision",
+        "baseline promotion cannot run from a contradictory report",
+        "writing a report that lists failed required gates",
+    ]
+    for phrase in required:
+        assert phrase in text
+
+
+def test_root_and_architecture_require_consistent_ratchet_reports() -> None:
+    for path in [ROOT_SKILL, ARCHITECTURE]:
+        text = path.read_text(encoding="utf-8")
+
+        assert "Ratchet reports must be internally consistent" in text
+        assert "failed required gates cannot coexist with accepted decisions" in text

@@ -202,6 +202,8 @@ justified:
   standard tooling entry points must be present and valid
 - tooling integrity gate: ratchet tooling files, script targets, evaluator output, snapshot, rollback, and
   baseline promotion behavior must be present, current, executable, and self-consistent
+- report consistency gate: accepted/rejected decision, aggregate gate status, failed gate lists, and
+  per-gate results must not contradict each other
 - scope and dependency gate: changes must stay inside the declared boundary and must not add
   undeclared dependencies, external assets, network calls, or generated artifacts
 - safety and policy gate: secrets, sensitive data handling, permissions, destructive operations, and
@@ -212,8 +214,8 @@ justified:
 - tooling survival gate: after rollback, standard scripts and their target files must still exist and run
 
 Do not mark a ratchet gate as accepted when the evaluation status is `error`, when required metrics
-are recorded as false, when rollback coverage or rollback drill is false, or when ratchet tooling
-integrity fails. Optional or noisy metrics
+are recorded as false, when rollback coverage or rollback drill is false, when ratchet tooling
+integrity fails, or when the ratchet report is internally contradictory. Optional or noisy metrics
 may produce warnings, but required gates must block acceptance.
 
 
@@ -244,6 +246,26 @@ Do not declare a new project complete if `ratchet` can only be run indirectly th
 non-standard command. The standard `ratchet` entry point must exist unless explicitly impossible and
 justified.
 
+
+
+
+## Ratchet Report Consistency Gate
+
+A ratchet report must be internally consistent. The final accepted/rejected decision must be derived
+from required gate results, not written independently.
+
+The report consistency gate must verify:
+
+- `accepted` is true only when every required gate passed
+- `accepted` is false when `requiredGatesFailed`, `failed_required`, or equivalent lists are non-empty
+- `accepted` is false when `allGatesPassed` or equivalent aggregate is false
+- `accepted` is false when evaluation status is error, missing, or unparsable
+- `accepted` is false when rollback coverage, rollback drill, tooling integrity, or tooling survival is false
+- the final decision, aggregate booleans, failed gate lists, and per-gate results do not contradict each other
+- baseline promotion cannot run from a contradictory report
+
+If a report contains both failed required gates and an accepted decision, the report itself is invalid
+and the ratchet must reject. Do not repair this by hiding the failed gate; repair the gate or rollback.
 
 
 ## Ratchet Tooling Integrity Gate
@@ -459,6 +481,7 @@ Avoid:
 - recording a failed required metric but still marking the ratchet gate as accepted
 - omitting standard entry points such as `ratchet` and relying on a non-standard command instead
 - keeping a script alias while deleting or moving its target file
+- writing a report that lists failed required gates while also marking the result as accepted
 - allowing rollback or snapshot cleanup to delete the active ratchet tooling
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
