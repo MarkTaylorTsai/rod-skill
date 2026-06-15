@@ -200,6 +200,8 @@ justified:
   outputs or state summaries
 - interface contract gate: required files, exports, schemas, routes, configs, public contracts, and
   standard tooling entry points must be present and valid
+- tooling integrity gate: ratchet tooling files, script targets, evaluator output, snapshot, rollback, and
+  baseline promotion behavior must be present, current, executable, and self-consistent
 - scope and dependency gate: changes must stay inside the declared boundary and must not add
   undeclared dependencies, external assets, network calls, or generated artifacts
 - safety and policy gate: secrets, sensitive data handling, permissions, destructive operations, and
@@ -207,9 +209,11 @@ justified:
 - rollback coverage gate: rollback coverage must include every file or artifact the patch may modify
 - rollback drill gate: new rollback tooling must be proven with a temporary failure or equivalent
   restore verification before the final report is accepted
+- tooling survival gate: after rollback, standard scripts and their target files must still exist and run
 
 Do not mark a ratchet gate as accepted when the evaluation status is `error`, when required metrics
-are recorded as false, or when rollback coverage or rollback drill is false. Optional or noisy metrics
+are recorded as false, when rollback coverage or rollback drill is false, or when ratchet tooling
+integrity fails. Optional or noisy metrics
 may produce warnings, but required gates must block acceptance.
 
 
@@ -239,6 +243,36 @@ the equivalent command mapping and the ratchet report must mark the mapping as a
 Do not declare a new project complete if `ratchet` can only be run indirectly through `evaluate` or a
 non-standard command. The standard `ratchet` entry point must exist unless explicitly impossible and
 justified.
+
+
+
+## Ratchet Tooling Integrity Gate
+
+Ratchet tooling is Stable Core. A system cannot safely ratchet forward if the gate, baseline, snapshot,
+or rollback machinery can disappear, self-corrupt, or be bypassed by a stale script alias.
+
+For new projects and any patch that changes evaluation, rollback, scripts, CI, or tool wiring, add a
+required tooling-integrity gate. This gate must verify:
+
+- every standard entry point exists by name
+- every standard entry point resolves to an existing file, command, or documented equivalent
+- `evaluate` emits machine-readable results and exits non-zero on required-gate failure
+- `ratchet` invokes the current evaluation command, enforces required gates, and exits non-zero on rejection
+- `snapshot` captures the ratchet tooling files or a known-good restore path for them
+- `rollback` restores the ratchet tooling files as well as application files
+- `baseline` never promotes an evaluation with required failed gates
+- rollback drill proves the tooling still exists and runs after restore
+- package scripts, Makefile targets, taskfile targets, or shell entry points do not point to missing files
+- snapshots and cleanup logic do not delete the active ratchet tooling directory
+
+The tooling-integrity gate must fail when a script name exists but its target file is missing, when a
+script can only run from a stale path, when rollback removes the ratchet tooling, or when a ratchet
+report is produced by an older copied evaluator instead of the current evaluator.
+
+For AI systems, tooling-integrity is especially important because evaluation, trace, retrieval,
+agent, skill, and loop gates depend on the ratchet toolchain. Do not accept an AI system when the AI
+subsystem metrics pass but the ratchet tooling is missing, stale, self-inconsistent, or not covered by
+rollback.
 
 
 ## AI System Ratchet Gates
@@ -361,6 +395,7 @@ patch:
   ratchet_gate:
   required_gates:
   standard_entry_points:
+  tooling_integrity:
   failed_gates:
   rollback_plan:
   rollback_coverage:
@@ -387,6 +422,7 @@ ROD Goal Loop Summary:
 - Ratchet gate:
 - Required gates:
 - Standard entry points:
+- Tooling integrity:
 - Failed gates:
 - Completion evidence:
 - Rollback:
@@ -422,6 +458,8 @@ Avoid:
 - defining metrics that only count tests without protecting behavior, contracts, scope, and rollback
 - recording a failed required metric but still marking the ratchet gate as accepted
 - omitting standard entry points such as `ratchet` and relying on a non-standard command instead
+- keeping a script alias while deleting or moving its target file
+- allowing rollback or snapshot cleanup to delete the active ratchet tooling
 - weakening tests, policies, or safety checks to pass
 - modifying production state as part of local repair work
 - making large rewrites before protecting the baseline

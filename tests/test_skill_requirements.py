@@ -152,3 +152,32 @@ def test_goal_loop_defines_ai_system_ratchet_gates() -> None:
     ]
     for phrase in required:
         assert phrase in text
+
+
+def test_goal_loop_requires_ratchet_tooling_integrity_gate() -> None:
+    text = GOAL_LOOP.read_text(encoding="utf-8")
+
+    required = [
+        "Ratchet Tooling Integrity Gate",
+        "Ratchet tooling is Stable Core",
+        "every standard entry point resolves to an existing file",
+        "evaluate` emits machine-readable results",
+        "ratchet` invokes the current evaluation command",
+        "snapshot` captures the ratchet tooling files",
+        "rollback` restores the ratchet tooling files",
+        "baseline` never promotes an evaluation with required failed gates",
+        "script name exists but its target file is missing",
+        "tooling survival gate",
+    ]
+    for phrase in required:
+        assert phrase in text
+
+
+def test_root_and_architecture_treat_ratchet_tooling_as_stable_core() -> None:
+    for path in [ROOT_SKILL, ARCHITECTURE]:
+        text = path.read_text(encoding="utf-8")
+
+        assert "Ratchet tooling is Stable Core" in text
+        assert "snapshot" in text
+        assert "rollback" in text
+        assert "self-checks" in text

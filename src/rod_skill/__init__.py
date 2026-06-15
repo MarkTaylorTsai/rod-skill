@@ -11,4 +11,4 @@ __all__ = [
     "validate_manifest",
 ]
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
